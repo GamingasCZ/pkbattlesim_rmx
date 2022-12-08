@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../assets/style.css">
+    <script type="text/javascript" src="../node_modules/androidjs/lib/androidjs.js"></script>
+    <script type="text/javascript" src="../assets/jquery-3.3.1.slim.min.js"></script>
+    <script type="text/javascript" src="../assets/communicator.js"></script>
+  </head>
+  <body>
+    <div id="darkBG"></div>
+    <dialog class="floatingDialog" id="credits">
+      <header>❤️ Credits ❤️</header>
+      <div style="text-align: center;">
+        <hr>
+        <strong>Frontend</strong>
+        <a target="_blank" class="link" href="https://gamingas.wz.cz/">GamingasCZ</a>
+        <hr>
+        <strong><i>pokemon-battle</i> library</strong>
+        <a target="_blank" class="link" href="https://github.com/fonse/pokemon-battle">fonse</a>
+        <hr>
+        <strong>Built with</strong>
+        <a target="_blank" class="link" href="https://github.com/android-js/androidjs">AndroidJS</a>
+        <hr>
+        <strong>Art fetched from</strong>
+        <a target="_blank" class="link" href="https://serebii.net/">serebii.net</a>
+        <hr>
+      </div>
+    </dialog>
+
+    <dialog class="fsDialog" id="battleDialog">
+      <header>Battle!</header>
+      <pre id="result"></pre>
+      <div id="battleButtonsContainer">
+        <button id="battleRematch"><img src="../assets/rematch.svg">Rematch</button>
+        <button id="battleClose"><img src="../assets/close.svg">Close</button>
+      </div>
+    </dialog>
+
+    <div id="pokemonDropdown" style="display: none;"></div>
+    <h2 id="title" class="underline">Pokemon Battle Simulator</h3>
+
+    <span id="status">Loading...</span>
+    <div id="main" class="mainDisabled">
+      <input class="pokemonInput" type="text" id="playerSearch" placeholder="Your Pokémon" disabled>
+      <div class="teamContainer" id="pContainer">
+        <div class="containerTutorial"><img src="../assets/plus.svg" class="addImg">Add Pokémon to your team using the search box above!</div></div>
+      <hr>
+      <input class="pokemonInput" type="text" id="oppoSearch" placeholder="Opponent's Pokémon" disabled>
+      <div class="teamContainer" id="oContainer">
+        <div class="containerTutorial"><img src="../assets/plus.svg" class="addImg">Add Pokémon the opponent's team using the search box above!</div></div>
+      <button id="battleButton" disabled>Battle!</button>
+    </div>
+    <script src="battle.js"></script>
+  </body>
+</html>

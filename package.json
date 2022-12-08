@@ -1,0 +1,33 @@
+{
+    "version": "1.0.0",
+    "name": "PKBattleSim",
+    "app-name": "PKBattleSim",
+    "package-name": "webview",
+    "project-type": "webview",
+    "icon": "./assets/icon/icon.png",
+    "dist-path": "./dist",
+    "permission": [
+        "android.permission.INTERNET"
+    ],
+    "description": "",
+    "main": "main.js",
+    "scripts": {
+        "start:dev": "node .",
+        "build": "androidjs build"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "androidjs": "^2.0.2",
+        "fs": "^0.0.1-security",
+        "path": "^0.12.7",
+        "pokemon-battle": "file:pkmn"
+    },
+    "project-name": "PKBattleSim",
+    "theme": {
+        "fullScreen": false,
+        "colorAccent": "#080808",
+        "colorPrimary": "#080808",
+        "colorPrimaryDark": "#080808"
+    }
+}

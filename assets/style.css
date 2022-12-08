@@ -1,0 +1,314 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+
+h1 { text-align: center; }
+
+#pokemonDropdown {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    max-height: 10em;
+    background-color: black;
+    padding: 0em;
+    overflow-y: auto;
+    box-sizing: border-box;
+    width: min(25.5em, 95%);
+    border-radius: 0.4em;
+    margin-top: 0.3em;
+    z-index: 2;
+    box-shadow: black 0px 0px 9px;
+}
+
+.pokeOption {
+    text-align: left;
+    min-height: 2.5em;
+    outline: none;
+    font-family: inherit;
+    font-size: large;
+    border-radius: 0;
+    border: none;
+    color: white;
+    font-weight: bold;
+}
+#pokemonDropdown button:nth-child(2n+1) {
+    background: #393939;
+}
+#pokemonDropdown button:nth-child(2n) {
+    background: #282828;
+}
+
+.disabled {
+    filter: grayscale(1);
+    opacity: 0.8;
+}
+.mainDisabled { opacity: 0.2; }
+
+.pkmnImage {
+    width: 5em;
+}
+
+.loadPlaceholder {
+    width: 5em;
+    height: 4em;
+}
+
+body {
+    display: flex;
+    background: #080808;
+    color: white;
+    font-family: 'Montserrat';
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+html {overflow-x: hidden;}
+
+#main {
+    display: flex;
+    color: inherit;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Montserrat';
+    overflow-x: hidden;
+}
+
+.pokemonInput {
+    padding: 0.2em 0.6em;
+    background: #484848;
+    border: gray solid 1px;
+    border-radius: 0.4em;
+    width: 86vw;
+    color: white;
+    font-family: 'Montserrat';
+    font-size: 1.3em;
+    outline: none;
+}
+
+.pokemonInput:disabled {
+    opacity: 0.4;
+}
+
+.pokemonInput::placeholder {
+    color: white;
+    padding-left: 1.7em;
+    background: url(../assets/searchOpaque.svg) no-repeat;
+    background-size: contain;
+    opacity: 0.5;
+}
+
+.pokemonCard {
+    display: flex;
+    flex-direction: column;
+    background: #121212;
+    padding: 0.5em;
+    border-radius: inherit;
+    border: gray solid 1px;
+    position: relative;
+    height: fit-content;
+    min-height: 5em;
+    align-items: center;
+    font-size: small;
+}
+
+#battleButton {
+    font-family: 'Montserrat';
+    font-size: 2em;
+    font-weight: bold;
+    background: linear-gradient(45deg, #16e5ed, #6da1ff);
+    padding: 0.2em 0.8em;
+    border: #1fa1e7 solid 2px;
+    border-radius: 0.3em;
+    cursor: pointer;
+    outline: none;
+    transform: scale(1);
+    transition: transform 0.1s ease-in-out;
+    user-select: none;
+    margin-top: 0.5em;
+}
+
+#battleButton:active {
+    transform: scale(1.2);
+}
+
+#battleButton:disabled {
+    background: none;
+    color: rgb(88, 88, 88);
+}
+
+.teamContainer {
+    background: #484848;
+    margin: 1em;
+    padding: 1em 2em;
+    border: gray solid 1px;
+    border-radius: 0.4em;
+    display: flex;
+    gap: 0.3em;
+    width: 75vw;
+    justify-content: center;
+    text-align: center;
+    flex-wrap: wrap;
+    margin-bottom: 0;
+}
+
+.containerTutorial {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    align-items: center;
+}
+
+.addImg {
+    width: 50px;
+    opacity: 0.3;
+}
+
+hr {
+    width: min(50em, 95%);
+    margin: 0.5em auto;
+    opacity: 0.1;
+}
+
+dialog {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: #2e2e2e;
+    z-index: 2;
+    border: gray 1px solid;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    overflow-y: auto;
+    animation: 0.2s linear;
+    animation-fill-mode: forwards;
+}
+
+.fsDialog {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.floatingDialog {
+    height: fit-content;
+    max-height: 80%;
+    width: 90%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 1em;
+}
+
+pre {
+    padding: 0.2em;
+    padding-bottom: 6em;
+}
+
+#result {
+    flex-grow: 1;
+}
+
+#battleButtonsContainer {
+    display: flex;
+    font-family: inherit;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+#battleButtonsContainer > button {
+    width: 50%;
+    border-radius: 0;
+    height: 2em;
+    border: none;
+    font-family: inherit;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3em;
+    outline: none;
+}
+
+#battleRematch { background: linear-gradient(45deg, #16e5ed, #6da1ff); }   
+#battleClose { background: linear-gradient(45deg, #ed1616, #ff6d6d); }   
+
+#darkBG {
+    position: absolute;
+    z-index: 1;
+    background-color: black;
+    transition: opacity 0.2s ease-in-out;
+    display: none;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+}
+
+header {
+    font-family: 'Montserrat';
+    font-size: 1.5em;
+    text-align: center;
+    border-bottom: gray 1px solid;
+    padding: 0.2em;
+}
+
+.underline {
+    text-decoration: #131313 2px solid underline;
+    text-underline-offset: 4px;
+}
+
+#loadingContainer {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.623);
+    border-radius: 0.3em;
+    width: 90%;
+    height: 90%;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#loadingBall {
+    position: absolute;
+    width: 80%;
+}
+
+#loadingCircle {
+    position: absolute;
+    animation: spinLoad 1.5s infinite cubic-bezier(.7,-0.17,.26,1.17);
+    width: 80%;
+}
+
+@keyframes spinLoad {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes popup {
+    from { opacity: 0; margin-top: 1em; }
+    to { opacity: 1; margin-top: 0em; }
+}
+@keyframes popupClose {
+    from { opacity: 1; margin-top: 0em; }
+    to { opacity: 0; margin-top: 1em; }
+}
+
+.link {
+	display: block;
+	color: white;
+	text-decoration: #555 1px solid underline;
+}
+
+#status {
+    margin-bottom: 0.5em;
+    transition: transform 0.2s ease-in-out;
+}
