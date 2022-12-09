@@ -138,8 +138,10 @@ function filterSearch(el) {
         return
     }
 
+    let query = $(el.currentTarget).val()
+    let capitalized = query[0].toUpperCase() + query.slice(1)
     $(".pokeOption").hide()
-    $(`.pokeOption:contains('${$(el.currentTarget).val()}')`).show()
+    $(`.pokeOption:contains('${capitalized}')`).show()
 }
 
 function openDialog(dialog, isFS) {
