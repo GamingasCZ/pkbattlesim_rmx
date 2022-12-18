@@ -1,10 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
 
 :root {
-    --border: gray 1px solid;
     --yes: linear-gradient(45deg, #16e5ed, #6da1ff);
     --no: linear-gradient(45deg, #ed1616, #ff6d6d);
+    
+    --DEF-DARK-BG: black;
+    --DEF-DARK-CARD: #121212;
+    --DEF-DARK-POPUPBG: #2e2e2e;
+    --DEF-DARK-INPUT: #484848;
+    --DEF-DARK-BORDER: gray 1px solid;
+    --DEF-DARK-TEXT: white;
+    --DEF-DARK-INVERT: invert(0);
 
+    --DEF-LIGHT-BG: rgb(235, 235, 235);
+    --DEF-LIGHT-CARD: #e7e7e7;
+    --DEF-LIGHT-POPUPBG: #dfdfdf;
+    --DEF-LIGHT-INPUT: #c2c2c2;
+    --DEF-LIGHT-BORDER: gray 1px solid;
+    --DEF-LIGHT-TEXT: rgb(0, 0, 0);
+    --DEF-LIGHT-INVERT: invert(1);
+
+    --BG: var(--DEF-DARK-BG);
+    --CARD: var(--DEF-DARK-CARD);
+    --POPUPBG: var(--DEF-DARK-POPUPBG);
+    --INPUT: var(--DEF-DARK-INPUT);
+    --BORDER: var(--DEF-DARK-BORDER);
+    --TEXT: var(--DEF-DARK-TEXT);
+    --INVERT: var(--DEF-DARK-INVERT);
 }
 
 *:not(.pokemonInput) {
@@ -44,14 +66,14 @@ h1 { text-align: center; }
     font-size: large;
     border-radius: 0;
     border: none;
-    color: white;
+    color: var(--TEXT);
     font-weight: bold;
 }
 #pokemonDropdown button:nth-child(2n+1) {
-    background: #393939;
+    background: var(--POPUPBG);
 }
 #pokemonDropdown button:nth-child(2n) {
-    background: #282828;
+    background: var(--INPUT);
 }
 
 .disabled {
@@ -70,10 +92,11 @@ h1 { text-align: center; }
 }
 
 body {
-    background: #080808;
-    color: white;
+    background: var(--BG);
+    color: var(--TEXT);
     font-family: 'Montserrat';
     overflow-x: hidden;
+    transition: background-color 0.2s, color 0.2s;
 }
 html {overflow-x: hidden;}
 
@@ -85,14 +108,15 @@ html {overflow-x: hidden;}
 
 .pokemonInput {
     padding: 0.2em 0.6em;
-    background: #484848;
-    border: var(--border);
+    background: var(--INPUT);
+    border: var(--BORDER);
     border-radius: 0.4em;
     width: 86vw;
-    color: white;
+    color: var(--TEXT);
     font-family: 'Montserrat';
     font-size: 1.3em;
     outline: none;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .pokemonInput:disabled {
@@ -101,6 +125,7 @@ html {overflow-x: hidden;}
 
 .pokemonInput::placeholder {
     color: white;
+    filter: var(--INVERT);
     padding-left: 1.7em;
     background: url(../assets/searchOpaque.svg) no-repeat;
     background-size: contain;
@@ -108,15 +133,31 @@ html {overflow-x: hidden;}
 }
 
 .pokemonCard {
-    background: #121212;
+    background: var(--CARD);
     padding: 0.5em;
     border-radius: inherit;
-    border: var(--border);;
+    border: var(--BORDER);;
     position: relative;
     height: fit-content;
     min-height: 5em;
     align-items: center;
     font-size: small;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.bottomButtonContainer {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    margin-top: 1.5em;
+}
+
+.importantButton {
+    border-radius: 0.3em;
+    cursor: pointer;
+    outline: none;
+    transform: scale(1);
+    transition: transform 0.1s ease-in-out;
 }
 
 #battleButton {
@@ -126,15 +167,19 @@ html {overflow-x: hidden;}
     background: linear-gradient(45deg, #16e5ed, #6da1ff);
     padding: 0.2em 0.8em;
     border: #1fa1e7 solid 2px;
-    border-radius: 0.3em;
-    cursor: pointer;
-    outline: none;
-    transform: scale(1);
-    transition: transform 0.1s ease-in-out;
-    margin-top: 0.5em;
 }
 
-#battleButton:active {
+#settingsButton {
+    border: #aeaeae solid 2px;
+    background: linear-gradient(45deg, #868686, #464646);
+    padding: 0.15em;
+    /*! aspect-ratio: 1; */
+    border-radius: 0.6em;
+    height: 40px;
+    width: 40px;
+}
+
+.importantButton:active {
     transform: scale(1.2);
 }
 
@@ -144,10 +189,10 @@ html {overflow-x: hidden;}
 }
 
 .teamContainer {
-    background: #484848;
+    background: var(--INPUT);
     margin: 1em;
     padding: 1em 2em;
-    border: var(--border);
+    border: var(--BORDER);
     border-radius: 0.4em;
     gap: 0.3em;
     width: 75vw;
@@ -156,6 +201,7 @@ html {overflow-x: hidden;}
     margin-bottom: 0;
     display: flex;
     justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .containerTutorial {
@@ -165,6 +211,7 @@ html {overflow-x: hidden;}
 .addImg {
     width: 50px;
     opacity: 0.3;
+    filter: var(--INVERT);
 }
 
 hr {
@@ -177,10 +224,10 @@ dialog {
     width: 100%;
     height: 100%;
     padding: 0;
-    background: #2e2e2e;
+    background: var(--POPUPBG);
     z-index: 2;
-    border: var(--border);
-    color: white;
+    border: var(--BORDER);
+    color: var(--TEXT);
     position: fixed;
     top: 0;
     left: 0;
@@ -188,6 +235,7 @@ dialog {
     overflow-y: auto;
     animation: 0.2s linear;
     animation-fill-mode: forwards;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .fsDialog {
@@ -248,19 +296,19 @@ pre {
     display: none;
     opacity: 0;
     width: 100%;
-    height: 100%;
+    height: 105vh;
 }
 
 header {
     font-family: 'Montserrat';
     font-size: 1.5em;
     text-align: center;
-    border-bottom: var(--border);
+    border-bottom: var(--BORDER);
     padding: 0.2em;
 }
 
 .underline {
-    text-decoration: #131313 2px solid underline;
+    text-decoration: #7e7e7e13 2px solid underline;
     text-underline-offset: 4px;
 }
 
@@ -303,7 +351,7 @@ header {
 
 .link {
 	display: block;
-	color: white;
+	color: var(--TEXT);
 	text-decoration: #555 1px solid underline;
 }
 
@@ -321,10 +369,14 @@ header {
     outline: none;
 }
 
-#updateButtons > button:nth-child(1) { background: var(--yes); } /* Download */
 #updateButtons > button:nth-child(2) { background: var(--no); } /* Close */
-   
 
+#updateLink {
+    text-decoration: none;
+    text-align: center;
+    color: black;
+    background: var(--yes);
+}
 
 #slider {
     position: relative;
@@ -332,7 +384,7 @@ header {
     width: 50px;
     height: 1.5em;
     background-color: #252d35;
-    border: var(--border);
+    border: var(--BORDER);
     border-radius: 5px;
     transition: background-color 0.05s ease-in-out;
 }
@@ -346,7 +398,7 @@ header {
     width: 26px;
     height: 26px;
     border-radius: inherit;
-    border: var(--border);
+    border: var(--BORDER);
     transition: left 0.1s ease-in-out;
 }
 
@@ -356,6 +408,10 @@ header {
 
 #slider:checked:after {
     left: 25px;
+}
+
+#slider:disabled {
+	opacity: 0.3;
 }
 
 .settingsOption {

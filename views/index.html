@@ -37,14 +37,26 @@
       <header>Update</header>
       <p class="textCentered">Version <strong id="newUpdate">1.1.0</strong> is available!</p> 
       <div class="columnFlex" id="updateButtons">
-        <a target="_blank" id="hiddenLink" href="https://github.com/veekun/pokedex" style="display: none;"></a>
-        <button id="updateDownload">Download</button>
+        <a target="_blank" class="columnFlex" id="updateLink" href="https://github.com/veekun/pokedex">Download</a>
         <button onclick="hideDialog()">Close</button>
         <hr>
         <div class="settingsOption" data-option="updateCheck">
           Check for updates
         </div>
       </div>
+    </dialog>
+
+    <dialog class="floatingDialog" id="settings">
+      <header>Settings</header>
+      <hr>
+      <div class="settingsOption" data-option="updateCheck">
+        Check for updates
+      </div>
+      <hr>
+      <div class="settingsOption" data-option="darkMode">
+        Dark mode
+      </div>
+      <hr>
     </dialog>
 
     <dialog class="fsDialog" id="battleDialog">
@@ -68,7 +80,10 @@
       <input class="pokemonInput" type="text" id="oppoSearch" placeholder="Opponent's Pokémon" disabled>
       <div class="teamContainer" id="oContainer">
         <div class="containerTutorial columnFlex"><img src="../assets/plus.svg" class="addImg">Add Pokémon the opponent's team using the search box above!</div></div>
-      <button id="battleButton" disabled>Battle!</button>
+      <div class="bottomButtonContainer">
+        <button class="importantButton" id="battleButton" disabled>Battle!</button>
+        <button class="importantButton" id="settingsButton"><img src="../assets/gear.svg"></button>
+      </div>
     </div>
     <script src="battle.js"></script>
   </body>

@@ -1,7 +1,63 @@
-front.send("doCheckUpdate")
 front.send("doPopup");
 var teams = [[], []]
 
+class Setting {
+    constructor(id, value, func) {
+        this.id = id
+        this.value = value
+        this.func = func
+    }
+
+    callFunc() {if (this.func != null) this.func(this.value)}
+
+    switchSetting() {
+        this.value = !this.value
+        this.callFunc()
+        saveSettings()
+    }
+}
+
+var OPTIONS = {
+    updateCheck: new Setting("updateCheck", true, checkUpdates),
+    darkMode: new Setting("darkMode", true, appTheme)
+}
+
+function saveSettings() {
+    let SHORT_OPT = {}
+    Object.keys(OPTIONS).forEach(key => {
+        SHORT_OPT[key] = OPTIONS[key].value
+    })
+
+    localStorage.setItem("settings", JSON.stringify(SHORT_OPT))
+}
+
+let sett = localStorage.getItem("settings")
+if (sett == null) {
+    saveSettings()
+} else { // Loading settings
+    let settArray = JSON.parse(sett)
+    Object.keys(settArray).forEach(key => {
+        OPTIONS[key].value = settArray[key]
+        OPTIONS[key].callFunc()
+    })
+}
+
+function appTheme(pick) {
+    let picks = ["LIGHT", "DARK"]
+    let option = picks[pick | 0]
+    $(":root").css("--BG", `var(--DEF-${option}-BG)`)
+    $(":root").css("--CARD", `var(--DEF-${option}-CARD)`)
+    $(":root").css("--POPUPBG", `var(--DEF-${option}-POPUPBG)`)
+    $(":root").css("--INPUT", `var(--DEF-${option}-INPUT)`)
+    $(":root").css("--BORDER", `var(--DEF-${option}-BORDER)`)
+    $(":root").css("--TEXT", `var(--DEF-${option}-TEXT)`)
+    $(":root").css("--INVERT", `var(--DEF-${option}-INVERT)`)
+}
+
+function checkUpdates(pick) {
+    if (!pick || $("#settings").prop("open")) return
+    front.send("doCheckUpdate")
+}
 
 window.onerror = function (msg, url, lineNo, columnNo, error) {
     alert(msg)
@@ -97,6 +153,7 @@ function updateBattleButton() {
 }
 
 var inpSelected = -1
+var OPTIONS
 front.on("doPopupResult", msg => {
 	pokemonOption(msg)
     
@@ -121,6 +178,7 @@ front.on("doPopupResult", msg => {
     })
 
     $("#title").click(() => openDialog($("#credits"), 0))
+    $("#settingsButton").click(openSettings)
     $("#darkBG").click(hideDialog)
     $("#battleClose").click(hideDialog)
     $("#battleRematch").click(() => front.send("doBattle", [teams]))
@@ -130,6 +188,18 @@ front.on("doBattleResult", battleResult => {
     $("#result").text(battleResult)
     openDialog($("#battleDialog"), 1)
 })
+
+function openSettings() {
+    $("#settings .slidebox").remove()
+
+    let settings = $("#settings > .settingsOption")
+    for (let i = 0; i < settings.length; i++) {
+        makeSlidebox(() => OPTIONS[settings.eq(i).attr("data-option")].switchSetting(), settings.eq(i), OPTIONS[settings.eq(i).attr("data-option")].value)
+    }
+
+    openDialog($("#settings"), 0)
+}
+
 
 function filterSearch(el) {
     if ($(el.currentTarget).val().length <= 1) { // Start search with 2 or more characters
@@ -164,26 +234,22 @@ function hideDialog() {
 front.on("updateResult", updateIsAvailable => {
     if (!updateIsAvailable[0]) return
 
-    makeSlidebox(() => console.log("hi"), ".settingsOption[data-option=updateCheck]", true)
+    makeSlidebox(() => OPTIONS["updateCheck"].switchSetting(), $("#updateButtons > div[data-option=updateCheck]"), OPTIONS["updateCheck"].value)
     $("#newUpdate").text(updateIsAvailable[1])
-
-    // CRASHHHH FUCKKCKCKKCK
-    $("#updateDownload").click(() => {
-        $("#hiddenLink").attr("href", updateIsAvailable[2])
-        $("#hiddenLink").click()
-    })
+    $("#updateLink").attr("href", updateIsAvailable[2])
     openDialog($("#update"), false)
 })
 
 function makeSlidebox(func, appendToElement, on = false) {
     let slider = document.createElement("input")
-    slider.type = "checkbox"; slider.max = 1; slider.min = 0;
-    slider.value = !on
+    slider.type = "checkbox";
+    slider.checked = on
     slider.id = "slider"
+    slider.className = "slidebox"
 
     slider.addEventListener("mousedown", ev => {
         ev.preventDefault()
         func()
     })
-    document.querySelector(appendToElement).appendChild(slider)
+    appendToElement.append(slider)
 }

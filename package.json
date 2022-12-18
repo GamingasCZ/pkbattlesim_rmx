@@ -30,9 +30,5 @@
         "colorAccent": "#080808",
         "colorPrimary": "#080808",
         "colorPrimaryDark": "#080808"
-    },
-    "devDependencies": {
-        "express": "^4.18.2",
-        "nodemon": "^2.0.20"
     }
 }
