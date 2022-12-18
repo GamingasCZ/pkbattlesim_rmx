@@ -13,3 +13,5 @@ Frontend by me :)
 Built with [AndroidJS](https://github.com/android-js/androidjs)
 
 Art fetched from [serebii.net](https://serebii.net/)
+
+Pokémon stats and moves from [pokemondb.net](https://pokemondb.net) and [veekun's pokedex library](https://github.com/veekun/pokedex)!
