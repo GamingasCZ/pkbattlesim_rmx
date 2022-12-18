@@ -12,13 +12,15 @@
     "description": "",
     "main": "main.js",
     "scripts": {
-        "test": "androidjs build && adb install -r dist/PKBattleSim.apk"
+        "test": "androidjs build && adb install -r dist/PKBattleSim.apk",
+        "browser": "nodemon browser.js"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
         "androidjs": "^2.0.2",
         "fs": "^0.0.1-security",
+        "node-gzip": "^1.1.2",
         "path": "^0.12.7",
         "pokemon-battle": "file:pkmn"
     },
@@ -28,5 +30,9 @@
         "colorAccent": "#080808",
         "colorPrimary": "#080808",
         "colorPrimaryDark": "#080808"
+    },
+    "devDependencies": {
+        "express": "^4.18.2",
+        "nodemon": "^2.0.20"
     }
 }

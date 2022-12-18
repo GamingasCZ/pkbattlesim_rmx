@@ -1,11 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
 
+:root {
+    --border: gray 1px solid;
+    --yes: linear-gradient(45deg, #16e5ed, #6da1ff);
+    --no: linear-gradient(45deg, #ed1616, #ff6d6d);
+
+}
+
 h1 { text-align: center; }
+
+.columnFlex {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
 #pokemonDropdown {
     position: absolute;
-    display: flex;
-    flex-direction: column;
     max-height: 10em;
     background-color: black;
     padding: 0em;
@@ -16,6 +28,8 @@ h1 { text-align: center; }
     margin-top: 0.3em;
     z-index: 2;
     box-shadow: black 0px 0px 9px;
+    display: flex;
+    flex-direction: column;
 }
 
 .pokeOption {
@@ -52,23 +66,15 @@ h1 { text-align: center; }
 }
 
 body {
-    display: flex;
     background: #080808;
     color: white;
     font-family: 'Montserrat';
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     overflow-x: hidden;
 }
 html {overflow-x: hidden;}
 
 #main {
-    display: flex;
     color: inherit;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     font-family: 'Montserrat';
     overflow-x: hidden;
 }
@@ -76,7 +82,7 @@ html {overflow-x: hidden;}
 .pokemonInput {
     padding: 0.2em 0.6em;
     background: #484848;
-    border: gray solid 1px;
+    border: var(--border);
     border-radius: 0.4em;
     width: 86vw;
     color: white;
@@ -98,12 +104,10 @@ html {overflow-x: hidden;}
 }
 
 .pokemonCard {
-    display: flex;
-    flex-direction: column;
     background: #121212;
     padding: 0.5em;
     border-radius: inherit;
-    border: gray solid 1px;
+    border: var(--border);;
     position: relative;
     height: fit-content;
     min-height: 5em;
@@ -140,22 +144,19 @@ html {overflow-x: hidden;}
     background: #484848;
     margin: 1em;
     padding: 1em 2em;
-    border: gray solid 1px;
+    border: var(--border);
     border-radius: 0.4em;
-    display: flex;
     gap: 0.3em;
     width: 75vw;
-    justify-content: center;
     text-align: center;
     flex-wrap: wrap;
     margin-bottom: 0;
+    display: flex;
+    justify-content: center;
 }
 
 .containerTutorial {
-    display: flex;
-    flex-direction: column;
     gap: 0.5em;
-    align-items: center;
 }
 
 .addImg {
@@ -175,7 +176,7 @@ dialog {
     padding: 0;
     background: #2e2e2e;
     z-index: 2;
-    border: gray 1px solid;
+    border: var(--border);
     color: white;
     position: fixed;
     top: 0;
@@ -213,12 +214,12 @@ pre {
 }
 
 #battleButtonsContainer {
-    display: flex;
     font-family: inherit;
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
+    flex-direction: row;
 }
 
 #battleButtonsContainer > button {
@@ -228,15 +229,13 @@ pre {
     border: none;
     font-family: inherit;
     font-size: 1.5em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     gap: 0.3em;
     outline: none;
+    flex-direction: row;
 }
 
-#battleRematch { background: linear-gradient(45deg, #16e5ed, #6da1ff); }   
-#battleClose { background: linear-gradient(45deg, #ed1616, #ff6d6d); }   
+#battleRematch { background: var(--yes); }   
+#battleClose { background: var(--no); }   
 
 #darkBG {
     position: absolute;
@@ -253,7 +252,7 @@ header {
     font-family: 'Montserrat';
     font-size: 1.5em;
     text-align: center;
-    border-bottom: gray 1px solid;
+    border-bottom: var(--border);
     padding: 0.2em;
 }
 
@@ -272,9 +271,6 @@ header {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 #loadingBall {
@@ -312,3 +308,59 @@ header {
     margin-bottom: 0.5em;
     transition: transform 0.2s ease-in-out;
 }
+
+#updateButtons > *:not(hr) {
+	width: 100%;
+	height: 2.2em;
+	border: none;
+	font-size: large;
+	font-family: inherit;
+    outline: none;
+}
+
+#updateButtons > button:nth-child(1) { background: var(--yes); } /* Download */
+#updateButtons > button:nth-child(2) { background: var(--no); } /* Close */
+   
+
+
+#slider {
+    position: relative;
+    -webkit-appearance: none;
+    width: 50px;
+    height: 1.5em;
+    background-color: #252d35;
+    border: var(--border);
+    border-radius: 5px;
+    transition: background-color 0.05s ease-in-out;
+}
+
+#slider:after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: -2px;
+    background: white;
+    width: 26px;
+    height: 26px;
+    border-radius: inherit;
+    border: var(--border);
+    transition: left 0.1s ease-in-out;
+}
+
+#slider:checked {
+    background: #dc2629;
+}
+
+#slider:checked:after {
+    left: 25px;
+}
+
+.settingsOption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 1em;
+}
+
+.textCentered { text-align: center; }
