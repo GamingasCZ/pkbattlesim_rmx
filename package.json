@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "name": "PKBattleSim",
     "app-name": "PKBattleSim",
     "package-name": "webview",
@@ -12,14 +12,15 @@
     "description": "",
     "main": "main.js",
     "scripts": {
-        "start:dev": "node .",
-        "build": "androidjs build"
+        "test": "androidjs build && adb install -r dist/PKBattleSim.apk",
+        "browser": "nodemon browser.js"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
         "androidjs": "^2.0.2",
         "fs": "^0.0.1-security",
+        "node-gzip": "^1.1.2",
         "path": "^0.12.7",
         "pokemon-battle": "file:pkmn"
     },

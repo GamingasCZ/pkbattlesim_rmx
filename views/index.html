@@ -8,7 +8,7 @@
     <script type="text/javascript" src="../assets/jquery-3.3.1.slim.min.js"></script>
     <script type="text/javascript" src="../assets/communicator.js"></script>
   </head>
-  <body>
+  <body class="columnFlex">
     <div id="darkBG"></div>
     <dialog class="floatingDialog" id="credits">
       <header>❤️ Credits ❤️</header>
@@ -26,15 +26,45 @@
         <strong>Art fetched from</strong>
         <a target="_blank" class="link" href="https://serebii.net/">serebii.net</a>
         <hr>
+        <strong>Pokemon data and moves</strong>
+        <a target="_blank" class="link" href="https://pokemondb.net">pokemondb.net</a>
+        <a target="_blank" class="link" href="https://github.com/veekun/pokedex">veekun/pokedex</a>
+        <hr>
       </div>
+    </dialog>
+
+    <dialog class="floatingDialog" id="update">
+      <header>Update</header>
+      <p class="textCentered">Version <strong id="newUpdate">1.1.0</strong> is available!</p> 
+      <div class="columnFlex" id="updateButtons">
+        <a target="_blank" class="columnFlex" id="updateLink" href="https://github.com/veekun/pokedex">Download</a>
+        <button onclick="hideDialog()">Close</button>
+        <hr>
+        <div class="settingsOption" data-option="updateCheck">
+          Check for updates
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="floatingDialog" id="settings">
+      <header>Settings</header>
+      <hr>
+      <div class="settingsOption" data-option="updateCheck">
+        Check for updates
+      </div>
+      <hr>
+      <div class="settingsOption" data-option="darkMode">
+        Dark mode
+      </div>
+      <hr>
     </dialog>
 
     <dialog class="fsDialog" id="battleDialog">
       <header>Battle!</header>
       <pre id="result"></pre>
-      <div id="battleButtonsContainer">
-        <button id="battleRematch"><img src="../assets/rematch.svg">Rematch</button>
-        <button id="battleClose"><img src="../assets/close.svg">Close</button>
+      <div id="battleButtonsContainer" class="columnFlex">
+        <button class="columnFlex" id="battleRematch"><img src="../assets/rematch.svg">Rematch</button>
+        <button class="columnFlex" id="battleClose"><img src="../assets/close.svg">Close</button>
       </div>
     </dialog>
 
@@ -42,15 +72,18 @@
     <h2 id="title" class="underline">Pokemon Battle Simulator</h3>
 
     <span id="status">Loading...</span>
-    <div id="main" class="mainDisabled">
+    <div id="main" class="mainDisabled columnFlex">
       <input class="pokemonInput" type="text" id="playerSearch" placeholder="Your Pokémon" disabled>
       <div class="teamContainer" id="pContainer">
-        <div class="containerTutorial"><img src="../assets/plus.svg" class="addImg">Add Pokémon to your team using the search box above!</div></div>
+        <div class="containerTutorial columnFlex"><img src="../assets/plus.svg" class="addImg">Add Pokémon to your team using the search box above!</div></div>
       <hr>
       <input class="pokemonInput" type="text" id="oppoSearch" placeholder="Opponent's Pokémon" disabled>
       <div class="teamContainer" id="oContainer">
-        <div class="containerTutorial"><img src="../assets/plus.svg" class="addImg">Add Pokémon the opponent's team using the search box above!</div></div>
-      <button id="battleButton" disabled>Battle!</button>
+        <div class="containerTutorial columnFlex"><img src="../assets/plus.svg" class="addImg">Add Pokémon the opponent's team using the search box above!</div></div>
+      <div class="bottomButtonContainer">
+        <button class="importantButton" id="battleButton" disabled>Battle!</button>
+        <button class="importantButton" id="settingsButton"><img src="../assets/gear.svg"></button>
+      </div>
     </div>
     <script src="battle.js"></script>
   </body>

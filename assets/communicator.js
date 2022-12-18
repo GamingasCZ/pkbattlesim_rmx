@@ -1,10 +1,66 @@
 front.send("doPopup");
 var teams = [[], []]
 
-var pokeCache = []
+class Setting {
+    constructor(id, value, func) {
+        this.id = id
+        this.value = value
+        this.func = func
+    }
+
+    callFunc() {if (this.func != null) this.func(this.value)}
+
+    switchSetting() {
+        this.value = !this.value
+        this.callFunc()
+        saveSettings()
+    }
+}
+
+var OPTIONS = {
+    updateCheck: new Setting("updateCheck", true, checkUpdates),
+    darkMode: new Setting("darkMode", true, appTheme)
+}
+
+function saveSettings() {
+    let SHORT_OPT = {}
+    Object.keys(OPTIONS).forEach(key => {
+        SHORT_OPT[key] = OPTIONS[key].value
+    })
+
+    localStorage.setItem("settings", JSON.stringify(SHORT_OPT))
+}
+
+let sett = localStorage.getItem("settings")
+if (sett == null) {
+    saveSettings()
+} else { // Loading settings
+    let settArray = JSON.parse(sett)
+    Object.keys(settArray).forEach(key => {
+        OPTIONS[key].value = settArray[key]
+        OPTIONS[key].callFunc()
+    })
+}
+
+function appTheme(pick) {
+    let picks = ["LIGHT", "DARK"]
+    let option = picks[pick | 0]
+    $(":root").css("--BG", `var(--DEF-${option}-BG)`)
+    $(":root").css("--CARD", `var(--DEF-${option}-CARD)`)
+    $(":root").css("--POPUPBG", `var(--DEF-${option}-POPUPBG)`)
+    $(":root").css("--INPUT", `var(--DEF-${option}-INPUT)`)
+    $(":root").css("--BORDER", `var(--DEF-${option}-BORDER)`)
+    $(":root").css("--TEXT", `var(--DEF-${option}-TEXT)`)
+    $(":root").css("--INVERT", `var(--DEF-${option}-INVERT)`)
+}
+
+function checkUpdates(pick) {
+    if (!pick || $("#settings").prop("open")) return
+    front.send("doCheckUpdate")
+}
 
 window.onerror = function (msg, url, lineNo, columnNo, error) {
-  alert(msg)
+    alert(msg)
 }
 
 function ballSvg(el, types) {
@@ -29,8 +85,8 @@ function ballSvg(el, types) {
 
 function pokemonThumb(id, name, types) {
     var card = $(`
-        <div class="pokemonCard">
-            <div id="loadingContainer">
+        <div class="pokemonCard columnFlex">
+            <div id="loadingContainer" class="columnFlex">
                 <img src="../assets/loading.svg" id="loadingBall"><img src="../assets/loadingCircle.svg" id="loadingCircle">
             </div>
             <div class="loadPlaceholder"></div>
@@ -53,7 +109,7 @@ function pokemonThumb(id, name, types) {
 
     card.click(el => {
         parent = $(el.currentTarget).closest("#oContainer").length
-        teams[parent].splice($(el.currentTarget).parent().children().index($(el.currentTarget))-1, 1)
+        teams[parent].splice($(el.currentTarget).parent().children().index($(el.currentTarget)) - 1, 1)
         $(el.currentTarget).remove()
         updateBattleButton()
         if (teams[parent].length == 6) $(".pokemonInput").eq(parent).attr("disabled", true)
@@ -71,7 +127,6 @@ function pokemonOption(messageJSON) {
         let name = pkmn.name
         let types = pkmn.types.length == 2 ? pkmn.types : [pkmn.types[0], pkmn.types[0]]
 
-        pokeCache.push([id, name])
         option.addEventListener("mousedown", () => {
             $(".containerTutorial").eq(inpSelected).hide()
             pokemonThumb(id, name, types)
@@ -86,8 +141,8 @@ function pokemonOption(messageJSON) {
     });
     $("#main").removeClass("mainDisabled")
     $(".pokemonInput").attr("disabled", false)
-	$("#status").text("Finished!")
-	$("#status").css("transform", "scaleY(0)")
+    $("#status").text("Finished!")
+    $("#status").css("transform", "scaleY(0)")
 }
 
 function updateBattleButton() {
@@ -98,10 +153,11 @@ function updateBattleButton() {
 }
 
 var inpSelected = -1
+var OPTIONS
 front.on("doPopupResult", msg => {
 	pokemonOption(msg)
-
-	$(".pokemonInput").focus(el => {
+    
+    $(".pokemonInput").focus(el => {
         filterSearch(el)
 
         $("#pokemonDropdown").css("display", "")
@@ -116,21 +172,34 @@ front.on("doPopupResult", msg => {
     $("#playerSearch").keyup(el => filterSearch(el))
     $("#oppoSearch").keyup(el => filterSearch(el))
 
-	$("#battleButton").click(() => {
+    $("#battleButton").click(() => {
         if (!updateBattleButton()) return
         front.send("doBattle", [teams])
     })
 
     $("#title").click(() => openDialog($("#credits"), 0))
+    $("#settingsButton").click(openSettings)
     $("#darkBG").click(hideDialog)
     $("#battleClose").click(hideDialog)
     $("#battleRematch").click(() => front.send("doBattle", [teams]))
 });
 
 front.on("doBattleResult", battleResult => {
-	$("#result").text(battleResult)
+    $("#result").text(battleResult)
     openDialog($("#battleDialog"), 1)
 })
+
+function openSettings() {
+    $("#settings .slidebox").remove()
+
+    let settings = $("#settings > .settingsOption")
+    for (let i = 0; i < settings.length; i++) {
+        makeSlidebox(() => OPTIONS[settings.eq(i).attr("data-option")].switchSetting(), settings.eq(i), OPTIONS[settings.eq(i).attr("data-option")].value)
+    }
+
+    openDialog($("#settings"), 0)
+}
+
 
 function filterSearch(el) {
     if ($(el.currentTarget).val().length <= 1) { // Start search with 2 or more characters
@@ -160,4 +229,27 @@ function hideDialog() {
         $("dialog").attr("open", false)
         $("#darkBG").css("display", "none")
     }, 250);
+}
+
+front.on("updateResult", updateIsAvailable => {
+    if (!updateIsAvailable[0]) return
+
+    makeSlidebox(() => OPTIONS["updateCheck"].switchSetting(), $("#updateButtons > div[data-option=updateCheck]"), OPTIONS["updateCheck"].value)
+    $("#newUpdate").text(updateIsAvailable[1])
+    $("#updateLink").attr("href", updateIsAvailable[2])
+    openDialog($("#update"), false)
+})
+
+function makeSlidebox(func, appendToElement, on = false) {
+    let slider = document.createElement("input")
+    slider.type = "checkbox";
+    slider.checked = on
+    slider.id = "slider"
+    slider.className = "slidebox"
+
+    slider.addEventListener("mousedown", ev => {
+        ev.preventDefault()
+        func()
+    })
+    appendToElement.append(slider)
 }
