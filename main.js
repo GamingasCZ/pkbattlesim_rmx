@@ -13,8 +13,12 @@ back.on("doCheckUpdate", async () => {
 	let xhr = new req
 	xhr.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			back.send("updateResult", JSON.parse(xhr.responseText))
+			let res = JSON.parse(xhr.responseText)
+			let newestVersion = res.tag_name.slice(1)
+			let package = JSON.parse(file.readFileSync(path.join(__dirname, "package.json"), { encoding: 'utf8', flag: 'r' }));
+			back.send("updateResult", [package.version != newestVersion, newestVersion, res.assets[0].browser_download_url])
 		}
+		else if (this.readyState == 4 && this.status != 200) back.send("updateResult", [false]) // Most likely status 503, no internet
 	};
 	
 	xhr.open("GET", "https://api.github.com/repos/GamingasCZ/pkbattlesim_rmx/releases/latest", true)

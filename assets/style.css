@@ -7,6 +7,10 @@
 
 }
 
+*:not(.pokemonInput) {
+    user-select: none;
+}
+
 h1 { text-align: center; }
 
 .columnFlex {
@@ -127,7 +131,6 @@ html {overflow-x: hidden;}
     outline: none;
     transform: scale(1);
     transition: transform 0.1s ease-in-out;
-    user-select: none;
     margin-top: 0.5em;
 }
 

@@ -161,12 +161,17 @@ function hideDialog() {
     }, 250);
 }
 
-front.on("updateResult", data => {
+front.on("updateResult", updateIsAvailable => {
+    if (!updateIsAvailable[0]) return
+
     makeSlidebox(() => console.log("hi"), ".settingsOption[data-option=updateCheck]", true)
-    $("#newUpdate").text(data.tag_name.slice(1))
+    $("#newUpdate").text(updateIsAvailable[1])
 
     // CRASHHHH FUCKKCKCKKCK
-    $("#updateDownload").click(() => window.open(data.assets[0].browser_download_url, "_blank"))
+    $("#updateDownload").click(() => {
+        $("#hiddenLink").attr("href", updateIsAvailable[2])
+        $("#hiddenLink").click()
+    })
     openDialog($("#update"), false)
 })
 
