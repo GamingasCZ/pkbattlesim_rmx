@@ -1,5 +1,5 @@
 {
-    "version": "1.1.0",
+    "version": "1.1.1",
     "name": "PKBattleSim",
     "app-name": "PKBattleSim",
     "package-name": "webview",
@@ -22,7 +22,7 @@
         "fs": "^0.0.1-security",
         "node-gzip": "^1.1.2",
         "path": "^0.12.7",
-        "pokemon-battle": "file:pkmn"
+        "pokemon-battle": "file:../pkmn"
     },
     "project-name": "PKBattleSim",
     "theme": {

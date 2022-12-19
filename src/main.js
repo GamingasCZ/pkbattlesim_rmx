@@ -21,8 +21,9 @@ back.on("doCheckUpdate", async () => {
 		else if (this.readyState == 4 && this.status != 200) back.send("updateResult", [false]) // Most likely status 503, no internet
 	};
 	
+	let key = file.readFileSync(path.join(__dirname, "api-key"), { encoding: 'utf8', flag: 'r' })
 	xhr.open("GET", "https://api.github.com/repos/GamingasCZ/pkbattlesim_rmx/releases/latest", true)
-	xhr.setRequestHeader("auth", "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")
+	xhr.setRequestHeader("auth", key)
 	xhr.send()
 	
 })

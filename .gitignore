@@ -105,3 +105,6 @@ dist
 
 # AndroidJS dist directory
 dist/
+
+# API key
+src/api-key
