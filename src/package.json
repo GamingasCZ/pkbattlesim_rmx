@@ -13,7 +13,7 @@
     "main": "main.js",
     "scripts": {
         "test": "androidjs build && adb install -r dist/PKBattleSim.apk",
-        "browser": "nodemon browser.js"
+        "release": "androidjs build --release && mv -u dist/PKBattleSim.apk ../dist/PKBattleSim-$npm_package_version.apk && rm -rf dist/"
     },
     "author": "",
     "license": "ISC",
