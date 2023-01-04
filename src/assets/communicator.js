@@ -1,5 +1,6 @@
 front.send("doPopup");
 var teams = [[], []]
+var typeColors = ["", "#a8a77a", "#c22e28", "#a98ff3", "#a33ea1", "#e2bf65", "#b6a136", "#a6b91a", "#735797", "#b7b7ce", "#ee8130", "#6390f0", "#7ac74c", "#f7d02c", "#f95587", "#96d9d6", "#6f35fc", "#705746", "#d685ad"]
 
 class Setting {
     constructor(id, value, func) {
@@ -19,7 +20,9 @@ class Setting {
 
 var OPTIONS = {
     updateCheck: new Setting("updateCheck", true, checkUpdates),
-    darkMode: new Setting("darkMode", true, appTheme)
+    darkMode: new Setting("darkMode", true, appTheme),
+    animations: new Setting("animations", true, null),
+    artFetch: new Setting("artFetch", true, null)
 }
 
 function saveSettings() {
@@ -64,7 +67,7 @@ window.onerror = function (msg, url, lineNo, columnNo, error) {
 }
 
 function ballSvg(el, types) {
-    let typeColors = ["", "#a8a77a", "#c22e28", "#a98ff3", "#a33ea1", "#e2bf65", "#b6a136", "#a6b91a", "#735797", "#b7b7ce", "#ee8130", "#6390f0", "#7ac74c", "#f7d02c", "#f95587", "#96d9d6", "#6f35fc", "#705746", "#d685ad"]
+    $("#loadingContainer").remove()
     let gradID = (new Date).getTime()
     let ball = `
     <svg class="pkmnImage" style="height:5em" id="svg5" version="1.1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -83,6 +86,7 @@ function ballSvg(el, types) {
     el.prepend(ball)
 }
 
+let originalCardPos = 0
 function pokemonThumb(id, name, types) {
     var card = $(`
         <div class="pokemonCard columnFlex">
@@ -93,29 +97,137 @@ function pokemonThumb(id, name, types) {
             <span>${name}</span>
         </div>
     `)
-    card.appendTo($(".teamContainer").eq(inpSelected))
+    card.appendTo($(".teamPokemon").eq(inpSelected))
 
-    let image = new Image()
+    // card.click(el => removeCard(el))
+    card.click(() => openStatView(id))
+
+    card.on('touchmove', e => { // Removing pokemon
+        let y = e.targetTouches[0].pageY
+
+        if (originalCardPos == 0) originalCardPos = y
+        else {
+            if (y-originalCardPos < 0) return
+            if (1-(y-originalCardPos)/50 <= 0) {removeCard(e.currentTarget); return}
+    
+            $(e.currentTarget).css("opacity", 1-(y-originalCardPos)/50)
+            $(e.currentTarget).css("transform", `translateY(${y-originalCardPos}px)`)
+        }
+    });
+
+    card.on('touchend', e => { // Drag stop in middle of deleting
+        originalCardPos = 0
+        $(e.currentTarget).css("opacity", 1)
+        $(e.currentTarget).css("transform", `none`)
+    })
+
+    if (!OPTIONS.artFetch.value) return ballSvg(card, types)
+    let image = new Image() // Fetching art
     image.src = `https://serebii.net/pokemon/art/${String(id).padStart(3, "0")}.png`
     image.addEventListener('load', () => {
         card.prepend(`<img src=${image.src} class="pkmnImage">`)
         $("#loadingContainer").remove()
         $(".loadPlaceholder").remove()
     })
-    image.addEventListener('error', () => {
-        $("#loadingContainer").remove()
-        ballSvg(card, types)
-    })
+    image.addEventListener('error', () => ballSvg(card, types))
+}
 
-    card.click(el => {
-        parent = $(el.currentTarget).closest("#oContainer").length
-        teams[parent].splice($(el.currentTarget).parent().children().index($(el.currentTarget)) - 1, 1)
-        $(el.currentTarget).remove()
-        updateBattleButton()
-        if (teams[parent].length == 6) $(".pokemonInput").eq(parent).attr("disabled", true)
-        else $(".pokemonInput").eq(parent).attr("disabled", false)
-        if (teams[parent].length == 0) $(".containerTutorial").eq(parent).show()
+function spritePlaceholder(height) { 
+    // Choose placeholder based on pk height
+    if (height < 0.7) $(":root").css("--pk-view-bg", `url(../assets/placeholders/smallest.svg)`)
+    else if (height < 1.2) $(":root").css("--pk-view-bg", `url(../assets/placeholders/normal.svg)`)
+    else if (height < 1.7) $(":root").css("--pk-view-bg", `url(../assets/placeholders/large.svg)`)
+    else $(":root").css("--pk-view-bg", `url(../assets/placeholders/biggest.svg)`)
+}
+
+function openStatView(pkID) {
+    front.send("doSearch", [pkID, 2])
+    front.on("foundPKMN", pkData => {
+        if (pkData[1] != 2) return
+        pkData = pkData[0]
+        let types = pkData.type.length == 2 ? pkData.type : [pkData.type[0], pkData.type[0]]
+
+        if (!OPTIONS.artFetch.value) spritePlaceholder(pkData.height)
+        else {
+            let image = new Image() // Fetching art
+            image.src = `https://serebii.net/pokemon/art/${String(pkData.id).padStart(3, "0")}.png`
+            image.addEventListener('load', () => $(":root").css("--pk-view-bg", `url(${image.src})`))
+            image.addEventListener('error', () => spritePlaceholder(pkData.height))
+        }
+
+
+        $("#pkTitle").text(pkData.name)
+        $("#pokeBackground").css("background", `linear-gradient(35deg, ${typeColors[types[0].id]}, ${typeColors[types[1].id]}), url(../assets/pokeBG.svg)`)
+
+        let total = Object.values(pkData.stats).reduceRight((acc, cur) => acc + cur, 0)
+        $("#statTotal").text(total)
+
+        for (let i = 0; i < $("#pkStatsContainer > div").length; i++) {
+            let stat = Object.values(pkData.stats)[i]
+            let perc = stat/255*100
+            $("#pkStatsContainer > div").eq(i).text(stat)
+            $("#pkStatsContainer > progress").eq(i).val(perc)
+            let hues = ["red","orange","yellow","lgreen","green","turq","blue"]
+            $("#pkStatsContainer > progress").eq(i).addClass("pr_"+hues[Math.round(perc/14)])
+        }
+
+        $("#pkMoveContainer").empty()
+        pkData.moves.forEach(x => {
+            $("#pkMoveContainer").append(`
+            <div class="moveBubble" style="background: ${typeColors[x.type]}">
+                <img src="../assets/typeIcons/type_${x.type}.webp">
+                <label>${x.name}</label>
+            </div>
+            `)
+        })
+
+        $(".typeBadge").eq(1).children().eq(0).attr("src", `../assets/typeIcons/none.svg`)
+        $(".typeBadge").eq(1).children().eq(1).text("None")
+        
+        $(".typeBadge").eq(0).children().eq(0).attr("src", `../assets/typeIcons/type_${pkData.type[0].id}.webp`)
+        $(".typeBadge").eq(0).children().eq(1).text(pkData.type[0].name)
+        if (types[0].id != types[1].id) {
+            $(".typeBadge").eq(1).children().eq(0).attr("src", `../assets/typeIcons/type_${pkData.type[1].id}.webp`)
+            $(".typeBadge").eq(1).children().eq(1).text(pkData.type[1].name)
+        }
+
+        $(".tabHeader").children().click(e => {
+            let pos = $(e.currentTarget).index()
+            tabScroll($(e.currentTarget).parent(), pos)
+        })
+
+        $(".tabContent").on("scroll", e => {
+            let scroll = Math.round((e.currentTarget.scrollLeft-24)/(maxScroll(e.currentTarget)+$(e.currentTarget).width())*100)
+            $(":root").css("--tabScrollLine", `${scroll}%`)
+        })
+
+        openDialog($("#statView"), 0)
+
+        $(":root").css("--statAnim", "var(--pkDance)")
+        setTimeout(() => {
+            $(":root").css("--statAnim", "var(--pkBreathe)")
+        }, 1500);
     })
+}
+
+function tabScroll(element, option) {
+    let pos = Math.round(option/element.children().length*100)
+    $(":root").css("--tabScrollLine", `${pos}%`)
+    element.children().removeClass("tabSelected")
+    element.children().eq(option).addClass("tabSelected")
+    let card = $(".tabContent").children().eq(option)
+    $(".tabContent")[0].scrollTo(option*card.width()*1.25+24, 0)
+}
+
+function removeCard(el) {
+    originalCardPos = 0
+    parent = $(el).closest("#oContainer").length // 0 or 1 (terribly written :D)
+    teams[parent].splice($(el).parent().children().index($(el)), 1)
+    $(el).remove()
+    updateBattleButton()
+    if (teams[parent].length == 6) $(".pokemonInput").eq(parent).attr("disabled", true)
+    else $(".pokemonInput").eq(parent).attr("disabled", false)
+    if (teams[parent].length == 0) $(".containerTutorial").eq(parent).show()
 }
 
 function pokemonOption(messageJSON) {
@@ -127,14 +239,7 @@ function pokemonOption(messageJSON) {
         let name = pkmn.name
         let types = pkmn.types.length == 2 ? pkmn.types : [pkmn.types[0], pkmn.types[0]]
 
-        option.addEventListener("mousedown", () => {
-            $(".containerTutorial").eq(inpSelected).hide()
-            pokemonThumb(id, name, types)
-            teams[inpSelected].push(id)
-            if (teams[inpSelected].length == 6) $(".pokemonInput").eq(inpSelected).attr("disabled", true)
-            else $(".pokemonInput").eq(inpSelected).attr("disabled", false)
-            updateBattleButton()
-        })
+        option.addEventListener("mousedown", () => addPokemon(id, name, types))
         option.innerText = `#${String(id).padStart(3, "0")} - ${name}`
         option.className = "pokeOption"
         document.querySelector("#pokemonDropdown").appendChild(option)
@@ -143,6 +248,18 @@ function pokemonOption(messageJSON) {
     $(".pokemonInput").attr("disabled", false)
     $("#status").text("Finished!")
     $("#status").css("transform", "scaleY(0)")
+}
+
+function addPokemon(id, name, types) {
+    $(".containerTutorial").eq(inpSelected).hide()
+    pokemonThumb(id, name, types)
+    teams[inpSelected].push(id)
+    if (teams[inpSelected].length == 6) {
+        $(".randomPokemon").eq(inpSelected).attr("disabled", true)
+        $(".pokemonInput").eq(inpSelected).attr("disabled", true)
+    }
+    else $(".pokemonInput").eq(inpSelected).attr("disabled", false)
+    updateBattleButton()    
 }
 
 function updateBattleButton() {
@@ -155,6 +272,7 @@ function updateBattleButton() {
 var inpSelected = -1
 var OPTIONS
 front.on("doPopupResult", msg => {
+    makeSettings();
 	pokemonOption(msg)
     
     $(".pokemonInput").focus(el => {
@@ -169,6 +287,12 @@ front.on("doPopupResult", msg => {
         $("#pokemonDropdown").css("display", "none")
     })
 
+    $(".randomPokemon").click(el => {
+        inpSelected = parseInt(el.currentTarget.getAttribute("data-ind"))
+        let pokeRandom = Math.round(1+Math.random()*1007)
+        front.send("doSearch", [pokeRandom, 1])
+    })
+
     $("#playerSearch").keyup(el => filterSearch(el))
     $("#oppoSearch").keyup(el => filterSearch(el))
 
@@ -177,27 +301,31 @@ front.on("doPopupResult", msg => {
         front.send("doBattle", [teams])
     })
 
-    $("#title").click(() => openDialog($("#credits"), 0))
-    $("#settingsButton").click(openSettings)
     $("#darkBG").click(hideDialog)
     $("#battleClose").click(hideDialog)
     $("#battleRematch").click(() => front.send("doBattle", [teams]))
 });
+$("#creditsButton").click(() => openDialog($("#credits"), 0))
+
+front.on("foundPKMN", pkData => {
+    if (pkData[1] != 1) return
+    pkData = pkData[0]
+    let types = pkData.type.length == 2 ? [pkData.type[0].id, pkData.type[1].id] : [pkData.type[0].id, pkData.type[0].id]
+    addPokemon(pkData.id, pkData.name, types)
+})
 
 front.on("doBattleResult", battleResult => {
     $("#result").text(battleResult)
     openDialog($("#battleDialog"), 1)
 })
 
-function openSettings() {
-    $("#settings .slidebox").remove()
+function makeSettings() {
+    $("#settingsMenu .slidebox").remove()
 
-    let settings = $("#settings > .settingsOption")
+    let settings = $("#settingsMenu .settingsOption")
     for (let i = 0; i < settings.length; i++) {
         makeSlidebox(() => OPTIONS[settings.eq(i).attr("data-option")].switchSetting(), settings.eq(i), OPTIONS[settings.eq(i).attr("data-option")].value)
     }
-
-    openDialog($("#settings"), 0)
 }
 
 
@@ -253,3 +381,55 @@ function makeSlidebox(func, appendToElement, on = false) {
     })
     appendToElement.append(slider)
 }
+
+function makeNumInput(affectValue, appendToElement, def = 50, min = 0, max = 100) {
+    let inpContainer = $("<div class='numInput'></div>")
+    let display = $(`<input class="numDisplay" type="number" value="${def}" min="${min}" max="${max}">`)
+    display.appendTo(inpContainer)
+    let numContainer = $("<div></div>")
+    for (let i = -1; i <= 1; i+=2) {
+        let button = $(`<button class='numIncrement'>${i == -1 ? "-" : "+"}</button>`)
+        button.appendTo(numContainer)
+        button.click(() => {display.val(parseInt(display.val())+i); clampNumInput(affectValue, display, min, max)})
+        display.on("input", () => clampNumInput(affectValue, display, min, max))
+        
+    }
+    numContainer.appendTo(inpContainer)
+    inpContainer.appendTo(appendToElement)
+}
+
+const clampNumInput = (affectValue, display, min, max) => {
+    console.log("hhi");
+    let value = clamp(display.val(), min, max)
+    display.val(value)
+    affectValue = value
+}
+
+const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+const maxScroll = el => el.scrollWidth - el.clientWidth
+
+$(function (){
+    $("#addTeam").click(() => {
+        openDialog($("#teamGeneral"), 0)
+    })
+
+    $("#addToTeam").click(() => {
+        openDialog($("#teamPKList"), 0)
+    })
+
+    $(".navButton").click(el => {
+        $("#mainContent")[0].scrollLeft = $("#mainContent > div").eq(0).width()*parseInt(el.currentTarget.getAttribute("data-ind"))*1.25
+    })
+    $("#mainContent").on("scroll", el => {
+        let currentScroll = el.currentTarget.scrollLeft-24
+        let max = maxScroll(el.currentTarget)-48
+        let page = currentScroll/max*2
+
+        let currentPage = $(".navButton").eq(Math.round(page)).children().eq(0)
+        let nextPage = $(".navButton").eq(Math.floor(page)+1).children().eq(0)
+        let prevPage = $(".navButton").eq(Math.floor(page)-1).children().eq(0)
+
+        currentPage.css("opacity",(page%1)*2)
+        nextPage.css("opacity",1-(page%1))
+    })
+})

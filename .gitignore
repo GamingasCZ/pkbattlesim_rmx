@@ -108,3 +108,4 @@ dist/
 
 # API key
 src/api-key
+src/test.js

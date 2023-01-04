@@ -1,5 +1,5 @@
 const back = require('androidjs').back;
-const { battle } = require("pokemon-battle")
+const { battle, stats } = require("pokemon-battle")
 const file = require("fs")
 const path = require("path")
 const req = require("xmlhttprequest-ssl")
@@ -29,3 +29,4 @@ back.on("doCheckUpdate", async () => {
 })
 
 back.on("doBattle", teams => back.send("doBattleResult", battle(teams[0][0], teams[0][1])))
+back.on("doSearch", pkID => back.send("foundPKMN", [stats(pkID[0]), pkID[1]]))

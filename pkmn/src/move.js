@@ -32,6 +32,7 @@ class Move {
     this.priority = move.priority;
     this.effect = Effect.make(move.effect, move.effect_chance);
     this.damageClass = move.damage_class;
+    this.pp = move.pp;
   }
   
   banned() {

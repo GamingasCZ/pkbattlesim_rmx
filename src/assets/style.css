@@ -1,9 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+@import url('Montserrat-VariableFont_wght.ttf');
+
+@keyframes breathe {
+    0% { transform: scale(1, 1); }
+    25% { transform: scale(1.015, 0.98); }
+    50% { transform: scale(1, 1); }
+    75% { transform: scale(0.985, 1.02); }
+    100% { transform: scale(1, 1); }
+}
+
+@keyframes dance {
+    0% { transform: rotate(0deg) translateY(0);}
+    25% { transform: rotate(-5deg) translateY(-2em) skew(8deg);}
+    50% { transform: rotate(0deg) translateY(0);}
+    75% { transform: rotate(5deg) translateY(-2em) skew(-8deg);}
+    100% {transform: rotate(0deg) translateY(0);}
+}
+
+@keyframes scrollBG {
+    from { background-position: 0px 0px, 0px 0px; }
+    to { background-position: 0px 0px, 32px 32px; }
+}
 
 :root {
     --yes: linear-gradient(45deg, #16e5ed, #6da1ff);
     --no: linear-gradient(45deg, #ed1616, #ff6d6d);
     
+    --pk-view-bg: url(https://serebii.net/pokemon/art/034.png);
+    --pkDance: dance 0.8s 1 cubic-bezier(.68,-0.2,.27,1.03);
+    --pkBreathe: breathe 3s infinite linear;
+    --statAnim: none;
+    --tabScrollLine: 0;
+
     --DEF-DARK-BG: black;
     --DEF-DARK-CARD: #121212;
     --DEF-DARK-POPUPBG: #2e2e2e;
@@ -27,6 +54,7 @@
     --BORDER: var(--DEF-DARK-BORDER);
     --TEXT: var(--DEF-DARK-TEXT);
     --INVERT: var(--DEF-DARK-INVERT);
+
 }
 
 *:not(.pokemonInput) {
@@ -97,29 +125,28 @@ body {
     font-family: 'Montserrat';
     overflow-x: hidden;
     transition: background-color 0.2s, color 0.2s;
-}
-html {overflow-x: hidden;}
-
-#main {
-    color: inherit;
     font-family: 'Montserrat';
     overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+    padding: 0.8em;
 }
+html {overflow-x: hidden;}
 
 .pokemonInput {
     padding: 0.2em 0.6em;
     background: var(--INPUT);
     border: var(--BORDER);
     border-radius: 0.4em;
-    width: 86vw;
+    width: 100%;
     color: var(--TEXT);
     font-family: 'Montserrat';
     font-size: 1.3em;
     outline: none;
     transition: background-color 0.2s, color 0.2s;
+    box-sizing: border-box;
 }
 
-.pokemonInput:disabled {
+*:disabled {
     opacity: 0.4;
 }
 
@@ -132,10 +159,26 @@ html {overflow-x: hidden;}
     opacity: 0.5;
 }
 
+.pkInputContainer {
+    display: flex;
+    gap: 0.5em;
+}
+  
+.randomPokemon > img { width: 2em; filter: var(--INVERT); }
+  
+.randomPokemon {
+    background: var(--INPUT);
+    border: var(--BORDER);
+    outline: none;
+    border-radius: 0.4em;
+    display: flex;
+    align-items: center;
+}
+
 .pokemonCard {
     background: var(--CARD);
     padding: 0.5em;
-    border-radius: inherit;
+    border-radius: 0.4em;
     border: var(--BORDER);;
     position: relative;
     height: fit-content;
@@ -143,6 +186,8 @@ html {overflow-x: hidden;}
     align-items: center;
     font-size: small;
     transition: background-color 0.2s, color 0.2s;
+    touch-action: none;
+    -webkit-touch-callout: none;
 }
 
 .bottomButtonContainer {
@@ -169,16 +214,6 @@ html {overflow-x: hidden;}
     border: #1fa1e7 solid 2px;
 }
 
-#settingsButton {
-    border: #aeaeae solid 2px;
-    background: linear-gradient(45deg, #868686, #464646);
-    padding: 0.15em;
-    /*! aspect-ratio: 1; */
-    border-radius: 0.6em;
-    height: 40px;
-    width: 40px;
-}
-
 .importantButton:active {
     transform: scale(1.2);
 }
@@ -191,10 +226,8 @@ html {overflow-x: hidden;}
 .teamContainer {
     background: var(--INPUT);
     margin: 1em;
-    padding: 1em 2em;
     border: var(--BORDER);
     border-radius: 0.4em;
-    gap: 0.3em;
     width: 75vw;
     text-align: center;
     flex-wrap: wrap;
@@ -202,11 +235,43 @@ html {overflow-x: hidden;}
     display: flex;
     justify-content: center;
     transition: background-color 0.2s, color 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: clip;
 }
+
+.teamPokemon {
+    display: flex;
+    gap: 0.5em;
+    margin: 0.5em;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.teamPokemon:empty {margin: 0;}
 
 .containerTutorial {
     gap: 0.5em;
+    padding: 0.7em;
 }
+
+.teamHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: var(--POPUPBG);
+    padding: 0 0.6em;
+}
+
+.THleft {
+    display: flex;
+    align-items: center;
+    gap: 0.2em;
+}
+
+.THleft > img { width: 1em; filter: var(--INVERT); }
+.THleft > label { font-weight: bold; }
 
 .addImg {
     width: 50px;
@@ -253,6 +318,8 @@ dialog {
     top: 50%;
     transform: translate(-50%, -50%);
     border-radius: 1em;
+    overflow: visible;
+    /*! border-bottom-left-radius: 1em; */
 }
 
 pre {
@@ -264,17 +331,17 @@ pre {
     flex-grow: 1;
 }
 
-#battleButtonsContainer {
+.mainButtonContainer {
     font-family: inherit;
-    position: fixed;
+    /*! position: fixed; */
     bottom: 0;
     left: 0;
     width: 100%;
     flex-direction: row;
 }
 
-#battleButtonsContainer > button {
-    width: 50%;
+.mainButtonContainer > button {
+    width: 100%;
     border-radius: 0;
     height: 2em;
     border: none;
@@ -284,6 +351,8 @@ pre {
     outline: none;
     flex-direction: row;
 }
+
+.bottomFixed { position: fixed; }
 
 #battleRematch { background: var(--yes); }   
 #battleClose { background: var(--no); }   
@@ -360,6 +429,14 @@ header {
     transition: transform 0.2s ease-in-out;
 }
 
+button {
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+
+}
+
 #updateButtons > *:not(hr) {
 	width: 100%;
 	height: 2.2em;
@@ -414,7 +491,7 @@ header {
 	opacity: 0.3;
 }
 
-.settingsOption {
+.settingsOption, .dropdownOption {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -422,4 +499,303 @@ header {
     padding: 0 1em;
 }
 
+.dropdownOption::after {
+    content: "";
+    background: url(../assets/menu.svg);
+    background-size: cover;
+    display: inline;
+    width: 0.7em;
+    height: 0.9em;
+}
+
 .textCentered { text-align: center; }
+
+#pkStatsContainer {
+    display: grid;
+    grid-template-columns: min-content auto min-content;
+    grid-column-gap: 0.7em;
+    grid-gap: 0.4em 0.7em;
+    align-items: center;
+    /*! padding: 0.6em 0.8em; */
+}
+
+progress {
+    appearance: none;
+    height: 0.7em;
+    border: var(--BORDER);
+    border-radius: 3em;
+    background: var(--CARD);
+}
+
+progress::-webkit-progress-value {
+    border-radius: 3em;
+}
+
+.pr_red::-webkit-progress-value { background: #ff1c20 }
+.pr_orange::-webkit-progress-value { background: #ff7e3d }
+.pr_yellow::-webkit-progress-value { background: #ffce2d }
+.pr_lgreen::-webkit-progress-value { background: #bbff29 }
+.pr_green::-webkit-progress-value { background: #27ff2e }
+.pr_turq::-webkit-progress-value { background: #1dff86 }
+.pr_blue::-webkit-progress-value { background: #11cbff }
+
+#pokeBackground {
+    height: 10em;
+    z-index: 5;
+    border-radius: inherit;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    background: linear-gradient(35deg, aqua, yellow), url(pokeBG.svg);
+    background-blend-mode: multiply, normal;
+    animation: scrollBG 2.5s infinite linear;
+    display: flex;
+    justify-content: center;
+}
+#statView::before {
+    content:  "";
+    position: absolute;
+    background: var(--pk-view-bg);
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    top: -5em;
+    z-index: 6;
+    background-size: contain;
+    animation: var(--statAnim);
+}
+
+#pkTitle, #teamTitle {
+    background: var(--POPUPBG);
+    padding: 0.2em 0.6em;
+    font-weight: bolder;
+    border-radius: 3em;
+}
+   
+
+#pkStatMain {
+    background: var(--POPUPBG);
+    z-index: 7;
+    position: relative;
+    border-radius: inherit;
+}
+
+#pkHeader {
+    display: flex;
+    justify-content: space-evenly;
+    transform: translateY(-2.4em);
+    margin-bottom: -3.5em;
+    align-items: center;
+}
+
+.tabHeader {
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+}
+
+.tabButton {
+    background: none;
+    border: none;
+    font-family: inherit;
+    color: var(--TEXT);
+    font-size: large;
+    outline: none;
+    transition: opacity 0.15s ease-in-out;
+}   
+
+.tabHeader::after {
+  width: 33%;
+  height: 4px;
+  background: gray;
+  position: absolute;
+  content: "";
+  bottom: 0;
+  left: var(--tabScrollLine);
+  transition: left 0.15s ease-in-out;
+}
+
+.tabHeader > button:not(.tabSelected) {
+    opacity: 0.5;
+}
+
+.tabContent {
+    overflow-x: auto;
+    display: flex;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    min-width: 100%;
+    gap: 5em;
+    scroll-behavior: smooth;
+}
+.tabContent > * {
+    min-width: inherit;
+    scroll-snap-align: start;
+    margin: 0 1.5em;
+    padding: 0.6em 0.8em;
+    box-sizing: border-box;
+}
+
+.example::-webkit-scrollbar {
+  display: none;
+}
+
+.typeBadge {
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+    background: #000000d1;
+    height: max-content;
+    padding: 0.3em;
+    border-radius: 1em;
+    font-size: 0.8em;
+}
+.typeBadge > img { width: 1.3em; }
+
+.moveBubble {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	border-radius: 0.5em;
+	padding: 0.1em 0.5em;
+	font-weight: 800;
+    overflow-x: clip;
+	position: relative;
+}
+
+.moveBubble::after {
+    content: "";
+    height: 1.4em;
+    position: absolute;
+    width: 100%;
+    background-image: linear-gradient(90deg, #2d2d2d, transparent);
+    left: 0px;
+    mix-blend-mode: hard-light;
+    overflow: clip;
+    border-radius: 0.5em;
+    filter: var(--INVERT);
+}
+
+.moveBubble > * { z-index: 1; }
+.moveBubble > img { width: 1em; }
+
+#pkMoveContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.bottomRounded {
+    border-bottom-left-radius: inherit !important;
+    border-bottom-right-radius: inherit !important;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+nav {
+    display: flex;
+    height: 3em;
+    justify-content: space-around;
+    background: var(--CARD);
+}
+
+.navButton {
+    width: 100%;
+    background: none;
+    border: none;
+    outline: none;
+    border-top: var(--POPUPBG) solid 2px;
+    position: relative;
+}
+
+.navButton > img { /*All images*/
+    width: 2em;
+}
+.navButton > img:nth-child(1) {
+    position: absolute;
+    z-index: 1;
+    filter: var(--INVERT);
+}
+#navSelected {opacity: 0;}
+
+#settingsMenu > * {
+    width: 100%;
+  }
+#settingsMenu {
+    display: flex;
+    flex-direction: column;
+    height: 85vh;
+    gap: 1em;
+}
+
+.iconOption > img {
+    width: 1.3em;
+}
+
+.iconOption {
+    margin: 0 1em;
+    display: flex;
+    gap: 1em;
+    align-items:center;
+}
+
+#teamTitle {
+    display: flex;
+    gap: 0.2em;
+    width: max-content;
+}
+
+#teamTitle > img { width: 0.7em; }
+
+#addToTeam { width: 8em; }
+
+
+#teamPokemon { overflow: clip; }
+#teamPokemon b { font-size: xx-large; } /*PK nick*/
+#teamPokemon i { opacity: 0.7; } /*PK name*/
+
+#teamPokemonHeader {
+    display: flex;
+    background: linear-gradient(90deg, #de872a, transparent);
+}
+#teamPokemonHeader > div {display: flex;}
+
+#teamPKHeaderData {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#teamPKImage { width: 5em; }
+
+.numIncrement {
+    color: white;
+    background: var(--INPUT);
+    border: var(--BORDER);
+    font-size: 1.9em;
+    line-height: 0;
+    font-family: inherit;
+    width: 1em;
+    height: 1em;
+}
+
+.numIncrement:first-child { border-radius: 0.2em 0 0 0.2em; }
+.numIncrement:last-child { border-radius: 0 0.2em 0.2em 0; }
+
+.numInput {
+    display: flex;
+    gap: 0.5em;
+}
+
+.numDisplay {
+    width: 2em;
+    padding: 0em 0.4em;
+    border-radius: 0.3em;
+    border: var(--BORDER);
+    background: var(--INPUT);
+    color: white;
+    font-family: inherit;
+    font-size: larger;
+}

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="64"
+   height="64"
+   viewBox="0 0 16.933333 16.933333"
+   version="1.1"
+   id="svg8863"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="addPokemon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview8865"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     showguides="false"
+     inkscape:zoom="5.0885522"
+     inkscape:cx="26.33362"
+     inkscape:cy="34.194402"
+     inkscape:window-width="1560"
+     inkscape:window-height="874"
+     inkscape:window-x="40"
+     inkscape:window-y="26"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs8860" />
+  <g
+     inkscape:label="Vrstva 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <circle
+       style="fill:none;stroke:#ffffff;stroke-width:0.945542;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:2;stroke-dasharray:1.89108, 3.78217;stroke-dashoffset:6.24058"
+       id="path9036"
+       cx="7.8878927"
+       cy="9.0083323"
+       r="7.1841855"
+       transform="rotate(-3.793902)" />
+    <g
+       id="g9437"
+       transform="matrix(0.55225368,0,0,0.55225368,3.7909191,3.751994)"
+       style="stroke:#ffffff">
+      <path
+         style="fill:none;stroke:#ffffff;stroke-width:1.827;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:2;stroke-dasharray:none;stroke-dashoffset:6.7782"
+         d="M 8.4666666,3.8996847 V 13.36292"
+         id="path9401" />
+      <path
+         style="fill:none;stroke:#ffffff;stroke-width:1.827;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:2;stroke-dasharray:none;stroke-dashoffset:6.7782"
+         d="M 13.198285,8.6313024 H 3.7350487"
+         id="path9401-0" />
+    </g>
+  </g>
+</svg>

@@ -49,16 +49,24 @@ pokemon.battle = function(team1, team2) {
   return battle.start().toString();
 };
   
-pokemon.build = function(pokemonId) {
+pokemon.stats = function(pokemonId) {
   pokemon = new Pokemon(pokemonId);
-  
-  return (Array.from(pokemon.moves).map((move) => move.toString())).join("\n").toString();
-};
-  
-pokemon.buildDebug = function(pokemonId) {
-  pokemon = new Pokemon(pokemonId);
-  
-  return (Array.from(pokemon.debug.scoredMoves).map((move) => move.toString() + " " + move.score)).join("\n").toString();
+
+  let i = 0
+  pokemon.moves.forEach(move => {
+    pokemon.moves[i].type = move.type.id
+    i++
+  })
+
+  return {
+    "id": pokemon.id,
+    "name": pokemon.name,
+    "type": pokemon.types,
+    "stats": pokemon.stats.base,
+    "moves": pokemon.moves,
+    "weight": pokemon.weight,
+    "height": pokemon.height
+  }
 };
   
 

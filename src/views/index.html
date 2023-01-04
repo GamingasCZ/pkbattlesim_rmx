@@ -1,90 +1,249 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../assets/style.css">
-    <script type="text/javascript" src="../node_modules/androidjs/lib/androidjs.js"></script>
-    <script type="text/javascript" src="../assets/jquery-3.3.1.slim.min.js"></script>
-    <script type="text/javascript" src="../assets/communicator.js"></script>
-  </head>
-  <body class="columnFlex">
-    <div id="darkBG"></div>
-    <dialog class="floatingDialog" id="credits">
-      <header>❤️ Credits ❤️</header>
-      <div style="text-align: center;">
-        <hr>
-        <strong>Frontend</strong>
-        <a target="_blank" class="link" href="https://gamingas.wz.cz/">GamingasCZ</a>
-        <hr>
-        <strong><i>pokemon-battle</i> library</strong>
-        <a target="_blank" class="link" href="https://github.com/fonse/pokemon-battle">fonse</a>
-        <hr>
-        <strong>Built with</strong>
-        <a target="_blank" class="link" href="https://github.com/android-js/androidjs">AndroidJS</a>
-        <hr>
-        <strong>Art fetched from</strong>
-        <a target="_blank" class="link" href="https://serebii.net/">serebii.net</a>
-        <hr>
-        <strong>Pokemon data and moves</strong>
-        <a target="_blank" class="link" href="https://pokemondb.net">pokemondb.net</a>
-        <a target="_blank" class="link" href="https://github.com/veekun/pokedex">veekun/pokedex</a>
-        <hr>
-      </div>
-    </dialog>
 
-    <dialog class="floatingDialog" id="update">
-      <header>Update</header>
-      <p class="textCentered">Version <strong id="newUpdate">1.1.0</strong> is available!</p> 
-      <div class="columnFlex" id="updateButtons">
-        <a target="_blank" class="columnFlex" id="updateLink" href="https://github.com/veekun/pokedex">Download</a>
-        <button onclick="hideDialog()">Close</button>
-        <hr>
-        <div class="settingsOption" data-option="updateCheck">
-          Check for updates
-        </div>
-      </div>
-    </dialog>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4285f4" />
+  <link rel="stylesheet" href="../assets/style.css">
+  <script type="text/javascript" src="../node_modules/androidjs/lib/androidjs.js"></script>
+  <script type="text/javascript" src="../assets/jquery-3.3.1.slim.min.js"></script>
+  <script type="text/javascript" src="../assets/communicator.js"></script>
+</head>
 
-    <dialog class="floatingDialog" id="settings">
-      <header>Settings</header>
+<div id="darkBG"></div>
+
+<body class="columnFlex">
+  <dialog class="floatingDialog" id="credits">
+    <header>❤️ Credits ❤️</header>
+    <div style="text-align: center;">
+      <hr>
+      <strong>Frontend</strong>
+      <a target="_blank" class="link" href="https://gamingas.wz.cz/">GamingasCZ</a>
+      <hr>
+      <strong><i>pokemon-battle</i> library</strong>
+      <a target="_blank" class="link" href="https://github.com/fonse/pokemon-battle">fonse</a>
+      <hr>
+      <strong>Built with</strong>
+      <a target="_blank" class="link" href="https://github.com/android-js/androidjs">AndroidJS</a>
+      <hr>
+      <strong>Art fetched from</strong>
+      <a target="_blank" class="link" href="https://serebii.net/">serebii.net</a>
+      <hr>
+      <strong>Pokemon data and moves</strong>
+      <a target="_blank" class="link" href="https://pokemondb.net">pokemondb.net</a>
+      <a target="_blank" class="link" href="https://github.com/veekun/pokedex">veekun/pokedex</a>
+      <hr>
+    </div>
+  </dialog>
+
+  <dialog class="floatingDialog" id="update">
+    <header>Update</header>
+    <p class="textCentered">Version <strong id="newUpdate">1.1.0</strong> is available!</p>
+    <div class="columnFlex" id="updateButtons">
+      <a target="_blank" class="columnFlex" id="updateLink" href="https://github.com/veekun/pokedex">Download</a>
+      <button onclick="hideDialog()">Close</button>
       <hr>
       <div class="settingsOption" data-option="updateCheck">
         Check for updates
       </div>
-      <hr>
-      <div class="settingsOption" data-option="darkMode">
-        Dark mode
+    </div>
+  </dialog>
+
+  <dialog class="floatingDialog" id="statView">
+    <div id="pokeBackground"></div>
+    <div id="pkStatMain">
+      <div id="pkHeader">
+        <div class="typeBadge"><img src="../assets/typeIcons/none.svg">
+          <div>None</div>
+        </div>
+        <h2 id="pkTitle">Unnamed</h2>
+        <div class="typeBadge"><img src="../assets/typeIcons/none.svg">
+          <div>None</div>
+        </div>
       </div>
-      <hr>
-    </dialog>
-
-    <dialog class="fsDialog" id="battleDialog">
-      <header>Battle!</header>
-      <pre id="result"></pre>
-      <div id="battleButtonsContainer" class="columnFlex">
-        <button class="columnFlex" id="battleRematch"><img src="../assets/rematch.svg">Rematch</button>
-        <button class="columnFlex" id="battleClose"><img src="../assets/close.svg">Close</button>
+      <header class="tabHeader">
+        <button class="tabButton tabSelected">Stats</button>
+        <button class="tabButton">Moves</button>
+        <button class="tabButton">Other</button>
+      </header>
+      <div class="tabContent">
+        <div id="pkStatsContainer">
+          <label for="hp">HP: </label><progress value="30" max="100" id="hp"></progress>
+          <div>1</div>
+          <label for="att">Attack: </label><progress value="30" max="100" id="att"></progress>
+          <div>1</div>
+          <label for="def">Defense: </label><progress value="30" max="100" id="def"></progress>
+          <div>1</div>
+          <label for="satt">Sp. Att.: </label><progress value="30" max="100" id="satt"></progress>
+          <div>1</div>
+          <label for="sdef">Sp. Def.: </label><progress value="30" max="100" id="sdef"></progress>
+          <div>1</div>
+          <label for="spd">Speed: </label><progress value="30" max="100" id="spd"></progress>
+          <div>1</div>
+          <b>Total: </b>
+          <div id="statTotal"></div>
+        </div>
+        <div id="pkMoveContainer">
+          <div class="moveBubble" style="background: #a8a77a">
+            <img src="../assets/typeIcons/type_1.webp">
+            <label>Tackle</label>
+          </div>
+        </div>
+        <div id="pkOtherContainer">
+          <div>National Dex ID: 15</div>
+          <hr>
+          <div>Weight: 80</div>
+          <hr>
+          <div>Height: 15</div>
+        </div>
       </div>
-    </dialog>
-
-    <div id="pokemonDropdown" style="display: none;"></div>
-    <h2 id="title" class="underline">Pokemon Battle Simulator</h3>
-
-    <span id="status">Loading...</span>
-    <div id="main" class="mainDisabled columnFlex">
-      <input class="pokemonInput" type="text" id="playerSearch" placeholder="Your Pokémon" disabled>
-      <div class="teamContainer" id="pContainer">
-        <div class="containerTutorial columnFlex"><img src="../assets/plus.svg" class="addImg">Add Pokémon to your team using the search box above!</div></div>
-      <hr>
-      <input class="pokemonInput" type="text" id="oppoSearch" placeholder="Opponent's Pokémon" disabled>
-      <div class="teamContainer" id="oContainer">
-        <div class="containerTutorial columnFlex"><img src="../assets/plus.svg" class="addImg">Add Pokémon the opponent's team using the search box above!</div></div>
-      <div class="bottomButtonContainer">
-        <button class="importantButton" id="battleButton" disabled>Battle!</button>
-        <button class="importantButton" id="settingsButton"><img src="../assets/gear.svg"></button>
+      <div class="bottomRounded mainButtonContainer">
+        <button onclick="hideDialog()" class="bottomRounded columnFlex" id="battleClose"><img
+            src="../assets/close.svg">Close</button>
       </div>
     </div>
-    <script src="battle.js"></script>
-  </body>
+
+  </dialog>
+
+  <dialog class="floatingDialog" id="teamGeneral">
+    <div id="pokeBackground">
+      <button><img src="../assets/addPokemon.svg" id="addToTeam" class="importantButton"></button>
+    </div>
+    <div id="pkTeamMain">
+      <div id="pkHeader">
+        <h2 id="teamTitle">
+          <div>Red's Team</div>
+          <img src="../assets/edit.svg">
+        </h2>
+      </div>
+      <div>
+        <input type="text" placeholder="Trainer name">
+        <div class="iconOption"><img src="../assets/share.svg">Share</div>
+        <hr>
+        <div class="iconOption"><img src="../assets/moveToTop.svg">Move to Top</div>
+        <hr>
+        <div class="bottomRounded mainButtonContainer columnFlex">
+          <button onclick="hideDialog()" class="bottomRounded columnFlex" id="battleClose"><img
+              src="../assets/close.svg">Delete</button>
+          <button onclick="hideDialog()" class="bottomRounded columnFlex" id="battleRematch"><img
+              src="../assets/close.svg">Save</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="floatingDialog" id="teamPKList">
+    <div id="pokeBackground">
+    </div>
+    <input autocomplete="off" class="pokemonInput" type="text" id="playerSearch" placeholder="Add Pokémon">
+    <div class="bottomRounded mainButtonContainer">
+      <button onclick="hideDialog()" class="bottomRounded columnFlex" id="battleClose"><img
+          src="../assets/close.svg">Close</button>
+    </div>
+  </dialog>
+
+  <dialog class="floatingDialog" id="teamPokemon" open>
+    <div class="dropdownOption" id="teamPokemonHeader">
+      <div>
+        <img id="teamPKImage" src="https://serebii.net/pokemon/art/157.png">
+        <div id="teamPKHeaderData">
+          <b>Mike<img src="../assets/edit.svg"></b>
+          <i>Typhlosion</i>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="settingsOption">Level</div>
+    <hr>
+    <div class="dropdownOption">Moves</div>
+    <hr>
+    <div class="bottomRounded mainButtonContainer columnFlex">
+      <button onclick="hideDialog()" class="bottomRounded columnFlex" id="battleClose"><img
+          src="../assets/close.svg">Remove</button>
+      <button onclick="hideDialog()" class="bottomRounded columnFlex" id="battleRematch"><img
+          src="../assets/close.svg">Save</button>
+    </div>
+
+  </dialog>
+
+  <dialog class="fsDialog" id="battleDialog">
+    <header>Battle!</header>
+    <pre id="result"></pre>
+    <div class="mainButtonContainer columnFlex bottomFixed">
+      <button class="columnFlex" id="battleRematch"><img src="../assets/rematch.svg">Rematch</button>
+      <button class="columnFlex" id="battleClose" onclick="hideDialog()"><img src="../assets/close.svg">Close</button>
+    </div>
+  </dialog>
+
+  <div id="pokemonDropdown" style="display: none;"></div>
+
+  <div class="tabContent" id="mainContent" style="width: 100vw;">
+    <div id="mainBattle" class="columnFlex">
+      <div class="pkInputContainer">
+        <input autocomplete="off" class="pokemonInput" type="text" id="playerSearch" placeholder="Your Pokémon"
+          disabled>
+        <button data-ind="0" class="randomPokemon"><img src="../assets/random.svg"></button>
+      </div>
+      <div class="teamContainer">
+        <div class="teamHeader">
+          <div class="THleft"><label>Team</label></div>
+          <div>None</div>
+        </div>
+        <div class="teamPokemon" id="pContainer"></div>
+        <div class="containerTutorial columnFlex"><img src="../assets/plus.svg" class="addImg">Add Pokémon with the
+          search box, or pick a team!</div>
+      </div>
+      <hr>
+      <div class="pkInputContainer">
+        <input autocomplete="off" class="pokemonInput" type="text" id="oppoSearch" placeholder="Opponent's Pokémon"
+          disabled>
+        <button data-ind="1" class="randomPokemon"><img src="../assets/random.svg"></button>
+      </div>
+      <div class="teamContainer">
+        <div class="teamHeader">
+          <div class="THleft"><label>Team</label></div>
+          <div>None</div>
+        </div>
+        <div class="teamPokemon" id="oContainer"></div>
+        <div class="containerTutorial columnFlex"><img src="../assets/plus.svg" class="addImg">Add Pokémon with the
+          search box, or pick a team!</div>
+      </div>
+      <div class="bottomButtonContainer">
+        <button class="importantButton" id="battleButton" disabled>Battle!</button>
+      </div>
+    </div>
+    <div id="teamsMenu">
+      <header>Teams</header>
+      <button class="randomPokemon" id="addTeam">add team</button>
+    </div>
+    <div id="settingsMenu" class="columnFlex">
+      <header>Settings</header>
+      <div style="flex-grow: 1;">
+        <div class="settingsOption" data-option="updateCheck">Check for updates</div>
+        <hr>
+        <div class="settingsOption" data-option="darkMode">Dark mode</div>
+        <hr>
+        <div class="settingsOption" data-option="animations">Animations</div>
+        <hr>
+        <div class="settingsOption" data-option="artFetch">Fetch Pokémon art</div>
+        <hr>
+      </div>
+      <div>
+        <div class="dropdownOption" id="creditsButton">Credits</div>
+        <hr>
+        <div class="dropdownOption">Source Code</div>
+      </div>
+    </div>
+  </div>
+  <script src="battle.js"></script>
+</body>
+<footer>
+  <nav>
+    <button class="navButton" data-ind="0"><img src="../assets/navbar/battleNav.svg" id="navSelected"><img src="../assets/navbar/battleNav-sel.svg"></button>
+    <button class="navButton" data-ind="1"><img src="../assets/navbar/pcNav.svg"><img src="../assets/navbar/pcNav-sel.svg"></button>
+    <button class="navButton" data-ind="2"><img src="../assets/navbar/settingsNav.svg"><img src="../assets/navbar/settingsNav-sel.svg"></button>
+  </nav>
+</footer>
+
 </html>

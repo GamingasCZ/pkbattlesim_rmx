@@ -22,8 +22,10 @@ class Pokemon {
     if (pokemon == null) { throw new Error("Pokemon not found: " + id); }
     
     this.name = pokemon.name;
+    this.id = id;
     this.types = (Array.from(pokemon.types).map((typeId) => new Type(typeId)));
     this.weight = pokemon.weight / 10;
+    this.height = pokemon.height / 10;
     
     this.stats = {
         base: pokemon.stats,

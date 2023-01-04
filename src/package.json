@@ -1,8 +1,8 @@
 {
-    "version": "1.1.1",
+    "version": "1.2.0",
     "name": "PKBattleSim",
     "app-name": "PKBattleSim",
-    "package-name": "webview",
+    "package-name": "com.gamingas.pkbattlesimrmx",
     "project-type": "webview",
     "icon": "./assets/icon/icon.png",
     "dist-path": "./dist",
