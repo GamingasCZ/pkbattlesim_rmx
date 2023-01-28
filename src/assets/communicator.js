@@ -242,15 +242,17 @@ function pokemonOption(messageJSON) {
         option.addEventListener("mousedown", () => addPokemon(id, name, types))
         option.innerText = `#${String(id).padStart(3, "0")} - ${name}`
         option.className = "pokeOption"
-        document.querySelector("#pokemonDropdown").appendChild(option)
+        document.querySelector("#pokeSelectionContainer").appendChild(option)
     });
     $("#main").removeClass("mainDisabled")
     $(".pokemonInput").attr("disabled", false)
-    $("#status").text("Finished!")
-    $("#status").css("transform", "scaleY(0)")
 }
 
 function addPokemon(id, name, types) {
+    if (inpSelected == 2) return addToTeam(id, name, types)
+
+    $("#pokemonDropdown").hide()
+    $(".pokemonInput").attr("disabled", false)
     $(".containerTutorial").eq(inpSelected).hide()
     pokemonThumb(id, name, types)
     teams[inpSelected].push(id)
@@ -258,8 +260,41 @@ function addPokemon(id, name, types) {
         $(".randomPokemon").eq(inpSelected).attr("disabled", true)
         $(".pokemonInput").eq(inpSelected).attr("disabled", true)
     }
-    else $(".pokemonInput").eq(inpSelected).attr("disabled", false)
+    else {
+        $(".randomPokemon").eq(inpSelected).attr("disabled", false)
+        $(".pokemonInput").eq(inpSelected).attr("disabled", false)
+    }
     updateBattleButton()    
+}
+
+function teamCard(trainerName, teamName, icon, colors, pokemon) {
+    let bgColors = ["", "#45442D", "#3D201F", "#2B2245", "#371D36", "#2D291E", "#2B2715", "#2B2D17", "#2F263A", "#1E1E39", "#36281D", "#24304B", "#2B3D20", "#363118", "#321A21", "#24403F", "#302942", "#332318", "#361B29"]
+    let card = $(`
+    <div class="teamCard" style="background: linear-gradient(33deg, ${bgColors[colors[0]]}, ${bgColors[colors[1]]}); border-image: linear-gradient(33deg,${typeColors[colors[0]]}, ${typeColors[colors[1]]}) 30;">
+        <div class="teamDetails">
+            <img src="../assets/typeIcons/type_${icon}.webp" class="teamIcon">
+            <div class="teamName">
+                <h2>${trainerName}'s</h2>
+                <h4>${teamName}</h4>
+            </div>
+            <img src="../assets/more.svg" class="teamMore">
+        </div>
+        <hr>
+        <div class="partyContainer"></div>
+    </div>
+    `)
+    pokemon.forEach(pk => {
+        card.children().eq(2).append(`<img src="https://www.serebii.net/pokedex-sv/icon/new/${pk.toString().padStart(3,0)}.png">`)
+    });
+    card.appendTo($(".teamsPKcontainer > td"))
+}
+
+var USER_TEAMS = []
+const TEAM_TEMPLATE = {name:"", trainer:"", pokemon:[], color:[1,1]}
+let newTeam;
+function addToTeam(id, name, types) {
+    newTeam.pokemon.push(id)
+    $("#teamGeneral > #pokeBackground").append(`<div>${name}</div>`)
 }
 
 function updateBattleButton() {
@@ -271,40 +306,6 @@ function updateBattleButton() {
 
 var inpSelected = -1
 var OPTIONS
-front.on("doPopupResult", msg => {
-    makeSettings();
-	pokemonOption(msg)
-    
-    $(".pokemonInput").focus(el => {
-        filterSearch(el)
-
-        $("#pokemonDropdown").css("display", "")
-        $("#pokemonDropdown").css("top", el.target.offsetTop + el.target.clientHeight + "px")
-        inpSelected = $(el.target).attr("id") != "playerSearch" | 0
-    })
-
-    $(".pokemonInput").blur(() => {
-        $("#pokemonDropdown").css("display", "none")
-    })
-
-    $(".randomPokemon").click(el => {
-        inpSelected = parseInt(el.currentTarget.getAttribute("data-ind"))
-        let pokeRandom = Math.round(1+Math.random()*1007)
-        front.send("doSearch", [pokeRandom, 1])
-    })
-
-    $("#playerSearch").keyup(el => filterSearch(el))
-    $("#oppoSearch").keyup(el => filterSearch(el))
-
-    $("#battleButton").click(() => {
-        if (!updateBattleButton()) return
-        front.send("doBattle", [teams])
-    })
-
-    $("#darkBG").click(hideDialog)
-    $("#battleClose").click(hideDialog)
-    $("#battleRematch").click(() => front.send("doBattle", [teams]))
-});
 $("#creditsButton").click(() => openDialog($("#credits"), 0))
 
 front.on("foundPKMN", pkData => {
@@ -398,8 +399,22 @@ function makeNumInput(affectValue, appendToElement, def = 50, min = 0, max = 100
     inpContainer.appendTo(appendToElement)
 }
 
+function openPokeDropdown(el) {
+    $("#pokeSearchInput").val("")
+    $(".pokemonInput").attr("disabled", true)
+    $("#pokemonDropdown").show()
+    $("#pokeSearchInput").focus()
+    $("#closeDropdown").one("click",() => {
+        $(".pokemonInput").attr("disabled", false)
+        $("#pokemonDropdown").hide()
+    })
+    
+    // $("#pokemonDropdown").css("display", "")
+    inpSelected = ["playerSearch", "oppoSearch", "addToTeam"].indexOf($(el.target).attr("id"))
+    el.preventDefault()
+}
+
 const clampNumInput = (affectValue, display, min, max) => {
-    console.log("hhi");
     let value = clamp(display.val(), min, max)
     display.val(value)
     affectValue = value
@@ -408,18 +423,36 @@ const clampNumInput = (affectValue, display, min, max) => {
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 const maxScroll = el => el.scrollWidth - el.clientWidth
 
+front.on("doPopupResult", msg => {
+    $("#battleRematch:not(.teamSave)").click(() => front.send("doBattle", [teams]))
+    pokemonOption(msg)
+});
+
 $(function (){
-    $("#addTeam").click(() => {
+    $(".addTeam").click(() => {
+        newTeam = TEAM_TEMPLATE;
         openDialog($("#teamGeneral"), 0)
     })
-
-    $("#addToTeam").click(() => {
-        openDialog($("#teamPKList"), 0)
+    $("#addToTeam").click(el => {openPokeDropdown(el)})
+    $("#trainerName").on("change", el => {
+        newTeam.trainer =  el.currentTarget.value
+    })
+    $(".pillInput").on("change", el => {
+        newTeam.name =  el.currentTarget.value
+    })
+    if (localStorage.getItem("teams") != null) {
+        USER_TEAMS = JSON.parse(localStorage.getItem("teams"))
+        USER_TEAMS.forEach(team => {
+            teamCard(team.trainer, team.name, team.color[0], team.color, team.pokemon)
+        });
+    }
+    $(".teamSave").click(() => {
+        USER_TEAMS.push(newTeam)
+        teamCard(newTeam.trainer, newTeam.name, newTeam.color[0], newTeam.color, newTeam.pokemon)
+        localStorage.setItem("teams", JSON.stringify(USER_TEAMS))
     })
 
-    $(".navButton").click(el => {
-        $("#mainContent")[0].scrollLeft = $("#mainContent > div").eq(0).width()*parseInt(el.currentTarget.getAttribute("data-ind"))*1.25
-    })
+    $(".navButton").click(el => $("#mainContent")[0].scrollLeft = $("#mainContent > div").eq(0).width()*parseInt(el.currentTarget.getAttribute("data-ind"))*1.25)
     $("#mainContent").on("scroll", el => {
         let currentScroll = el.currentTarget.scrollLeft-24
         let max = maxScroll(el.currentTarget)-48
@@ -432,4 +465,25 @@ $(function (){
         currentPage.css("opacity",(page%1)*2)
         nextPage.css("opacity",1-(page%1))
     })
+
+    makeSettings();
+    
+    $(".pokemonInput:not(#trainerName)").click(el => openPokeDropdown(el))
+
+    $(".randomPokemon").click(el => {
+        inpSelected = parseInt(el.currentTarget.getAttribute("data-ind"))
+        let pokeRandom = Math.round(1+Math.random()*1007)
+        front.send("doSearch", [pokeRandom, 1])
+    })
+
+    $("#pokeSearchInput").keyup(el => filterSearch(el))
+
+    $("#battleButton").click(() => {
+        if (!updateBattleButton()) return
+        front.send("doBattle", [teams])
+    })
+
+    $("#darkBG").click(hideDialog)
+    $("#battleClose").click(hideDialog)
+    $(".pillInput").on("input", e => {$(e.target).width(0);$(e.target).width(e.target.scrollWidth)})
 })

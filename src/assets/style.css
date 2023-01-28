@@ -72,18 +72,29 @@ h1 { text-align: center; }
 
 #pokemonDropdown {
     position: absolute;
-    max-height: 10em;
-    background-color: black;
-    padding: 0em;
-    overflow-y: auto;
+    height: 100vh;
+    background-color: var(--CARD);
     box-sizing: border-box;
-    width: min(25.5em, 95%);
-    border-radius: 0.4em;
-    margin-top: 0.3em;
+    width: 100%;
     z-index: 2;
     box-shadow: black 0px 0px 9px;
     display: flex;
     flex-direction: column;
+    top: 0;
+}
+
+#pokeSelectionContainer {
+    display: flex;
+    flex-direction: column;
+    padding-top: 3em;
+}
+#pokeSearch img {width: 3em;}
+#pokeSearchInput {flex-grow: 1;}
+#pokeSearch {
+    position: fixed;
+    top: 0;
+    display: flex;
+    width: 100%;
 }
 
 .pokeOption {
@@ -212,6 +223,60 @@ html {overflow-x: hidden;}
     background: linear-gradient(45deg, #16e5ed, #6da1ff);
     padding: 0.2em 0.8em;
     border: #1fa1e7 solid 2px;
+}
+
+#teamMakeButton {
+    font-family: 'Montserrat';
+    font-size: 2em;
+    font-weight: bold;
+    padding: 0.2em 0.8em;
+    background: linear-gradient(45deg, #f43731, #6a26ff);
+    border: #260202 solid 2px;
+}
+#teamsMenu th {height: 1px;}
+.teamsPKcontainer {vertical-align: top;}
+.teamsAddButton {height: 1px; text-align: center;}
+
+.teamMore {
+    margin-left: auto;
+    width: 1.4em;
+    opacity: 0.6;
+    margin-right: 0.6em;       
+}
+
+.teamDetails {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+}
+.teamName > * {
+    margin: 0;
+}
+.partyContainer {
+    display: flex;
+    gap: 1.2em;
+    justify-content: center;
+}
+.teamName h2 { /*Trainer name*/
+    font-weight: lighter;
+    font-size: 0.7em;
+}
+.teamIcon {width: 2.3em;}
+.teamCard {
+    padding: 0.3em;
+    background: linear-gradient(33deg, #312e21, #31212d);
+    border: var(--BORDER);
+    border-radius: 0.3em;
+    --BORDER: solid 1px;
+    border-image: linear-gradient(33deg,#f9ad1a, #9d0fdd) 30;
+}
+.teamsPKcontainer > td {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin: 1em 0;
+    max-height: 65vh;
+    overflow-y: auto;
 }
 
 .importantButton:active {
@@ -545,7 +610,7 @@ progress::-webkit-progress-value {
     border-radius: inherit;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    background: linear-gradient(35deg, aqua, yellow), url(pokeBG.svg);
+    background: linear-gradient(35deg, #2c1616, #09203c), url(pokeBG.svg);
     background-blend-mode: multiply, normal;
     animation: scrollBG 2.5s infinite linear;
     display: flex;
@@ -570,7 +635,15 @@ progress::-webkit-progress-value {
     font-weight: bolder;
     border-radius: 3em;
 }
-   
+.pillInput {
+    background: none;
+    color: inherit;
+    border: none;
+    outline: none;
+    font-weight: inherit;
+    font-size: inherit;
+    font-family: inherit;
+}   
 
 #pkStatMain {
     background: var(--POPUPBG);

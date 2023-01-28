@@ -1,7 +1,13 @@
 <svg width="16" height="16" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
- <g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="2">
-  <path d="m7.9638 4.9566" stroke-width=".88722"/>
-  <path d="m1.25 14.75 6.75-6.75-0.99305-3.7061 2.0165-3.0535" stroke-width="2.5"/>
-  <path d="m8.2194 7.9595 3.8659 0.040469 2.2308-3.134" stroke-width="2.5"/>
+ <g transform="matrix(.72085 .70007 -.708 .71278 7.678 -1.2586)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="2" stroke-width="2.4883">
+  <g transform="rotate(-4.3371 3.6478 3.3745)">
+   <path d="m4.6687 4.9981"/>
+   <path d="m6.3915 7.4709-2.8828-2.5683 0.27669-3.6483"/>
+  </g>
+  <g transform="matrix(-.99714 -.075624 -.075624 .99714 13.632 .28553)">
+   <path d="m4.6687 4.9981"/>
+   <path d="m6.3915 7.4709-2.8828-2.5683 0.27669-3.6483"/>
+  </g>
+  <path d="m6.6934 7.2517v7.343" stroke-dashoffset="25.618"/>
  </g>
 </svg>
