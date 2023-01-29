@@ -9,7 +9,7 @@ class Setting {
         this.func = func
     }
 
-    callFunc() {if (this.func != null) this.func(this.value)}
+    callFunc() { if (this.func != null) this.func(this.value) }
 
     switchSetting() {
         this.value = !this.value
@@ -107,11 +107,11 @@ function pokemonThumb(id, name, types) {
 
         if (originalCardPos == 0) originalCardPos = y
         else {
-            if (y-originalCardPos < 0) return
-            if (1-(y-originalCardPos)/50 <= 0) {removeCard(e.currentTarget); return}
-    
-            $(e.currentTarget).css("opacity", 1-(y-originalCardPos)/50)
-            $(e.currentTarget).css("transform", `translateY(${y-originalCardPos}px)`)
+            if (y - originalCardPos < 0) return
+            if (1 - (y - originalCardPos) / 50 <= 0) { removeCard(e.currentTarget); return }
+
+            $(e.currentTarget).css("opacity", 1 - (y - originalCardPos) / 50)
+            $(e.currentTarget).css("transform", `translateY(${y - originalCardPos}px)`)
         }
     });
 
@@ -132,7 +132,7 @@ function pokemonThumb(id, name, types) {
     image.addEventListener('error', () => ballSvg(card, types))
 }
 
-function spritePlaceholder(height) { 
+function spritePlaceholder(height) {
     // Choose placeholder based on pk height
     if (height < 0.7) $(":root").css("--pk-view-bg", `url(../assets/placeholders/smallest.svg)`)
     else if (height < 1.2) $(":root").css("--pk-view-bg", `url(../assets/placeholders/normal.svg)`)
@@ -164,11 +164,11 @@ function openStatView(pkID) {
 
         for (let i = 0; i < $("#pkStatsContainer > div").length; i++) {
             let stat = Object.values(pkData.stats)[i]
-            let perc = stat/255*100
+            let perc = stat / 255 * 100
             $("#pkStatsContainer > div").eq(i).text(stat)
             $("#pkStatsContainer > progress").eq(i).val(perc)
-            let hues = ["red","orange","yellow","lgreen","green","turq","blue"]
-            $("#pkStatsContainer > progress").eq(i).addClass("pr_"+hues[Math.round(perc/14)])
+            let hues = ["red", "orange", "yellow", "lgreen", "green", "turq", "blue"]
+            $("#pkStatsContainer > progress").eq(i).addClass("pr_" + hues[Math.round(perc / 14)])
         }
 
         $("#pkMoveContainer").empty()
@@ -183,7 +183,7 @@ function openStatView(pkID) {
 
         $(".typeBadge").eq(1).children().eq(0).attr("src", `../assets/typeIcons/none.svg`)
         $(".typeBadge").eq(1).children().eq(1).text("None")
-        
+
         $(".typeBadge").eq(0).children().eq(0).attr("src", `../assets/typeIcons/type_${pkData.type[0].id}.webp`)
         $(".typeBadge").eq(0).children().eq(1).text(pkData.type[0].name)
         if (types[0].id != types[1].id) {
@@ -197,7 +197,7 @@ function openStatView(pkID) {
         })
 
         $(".tabContent").on("scroll", e => {
-            let scroll = Math.round((e.currentTarget.scrollLeft-24)/(maxScroll(e.currentTarget)+$(e.currentTarget).width())*100)
+            let scroll = Math.round((e.currentTarget.scrollLeft - 24) / (maxScroll(e.currentTarget) + $(e.currentTarget).width()) * 100)
             $(":root").css("--tabScrollLine", `${scroll}%`)
         })
 
@@ -211,12 +211,12 @@ function openStatView(pkID) {
 }
 
 function tabScroll(element, option) {
-    let pos = Math.round(option/element.children().length*100)
+    let pos = Math.round(option / element.children().length * 100)
     $(":root").css("--tabScrollLine", `${pos}%`)
     element.children().removeClass("tabSelected")
     element.children().eq(option).addClass("tabSelected")
     let card = $(".tabContent").children().eq(option)
-    $(".tabContent")[0].scrollTo(option*card.width()*1.25+24, 0)
+    $(".tabContent")[0].scrollTo(option * card.width() * 1.25 + 24, 0)
 }
 
 function removeCard(el) {
@@ -230,8 +230,12 @@ function removeCard(el) {
     if (teams[parent].length == 0) $(".containerTutorial").eq(parent).show()
 }
 
+var FAVORITE_POKEMON = []
+let showingFaves = false
 function pokemonOption(messageJSON) {
     let pokemons = messageJSON
+    if (localStorage.getItem("favoritePokemon") != null) FAVORITE_POKEMON = JSON.parse(localStorage.getItem("favoritePokemon"))
+    alert(FAVORITE_POKEMON.join(","))
     Object.values(pokemons).forEach(pkmn => {
         let option = document.createElement("button")
 
@@ -243,6 +247,19 @@ function pokemonOption(messageJSON) {
         option.innerText = `#${String(id).padStart(3, "0")} - ${name}`
         option.className = "pokeOption"
         document.querySelector("#pokeSelectionContainer").appendChild(option)
+        $(option).append("<img src='../assets/starUnfilled.svg' class='pokemonStar'>")
+        $(".pokemonStar:last").on("mousedown", el => {
+            el.stopPropagation()
+            if (FAVORITE_POKEMON.includes(pkmn.id)) {
+                $(el.currentTarget).attr("src", "../assets/starUnfilled.svg")
+                FAVORITE_POKEMON.splice(FAVORITE_POKEMON.indexOf(pkmn.id), 1)
+            }
+            else {
+                $(el.currentTarget).attr("src", "../assets/star.svg")
+                FAVORITE_POKEMON.push(pkmn.id)
+            }
+            localStorage.setItem("favoritePokemon", JSON.stringify(FAVORITE_POKEMON))
+        })
     });
     $("#main").removeClass("mainDisabled")
     $(".pokemonInput").attr("disabled", false)
@@ -264,9 +281,10 @@ function addPokemon(id, name, types) {
         $(".randomPokemon").eq(inpSelected).attr("disabled", false)
         $(".pokemonInput").eq(inpSelected).attr("disabled", false)
     }
-    updateBattleButton()    
+    updateBattleButton()
 }
 
+let cardSelected;
 function teamCard(trainerName, teamName, icon, colors, pokemon) {
     let bgColors = ["", "#45442D", "#3D201F", "#2B2245", "#371D36", "#2D291E", "#2B2715", "#2B2D17", "#2F263A", "#1E1E39", "#36281D", "#24304B", "#2B3D20", "#363118", "#321A21", "#24403F", "#302942", "#332318", "#361B29"]
     let card = $(`
@@ -284,16 +302,76 @@ function teamCard(trainerName, teamName, icon, colors, pokemon) {
     </div>
     `)
     pokemon.forEach(pk => {
-        card.children().eq(2).append(`<img src="https://www.serebii.net/pokedex-sv/icon/new/${pk.toString().padStart(3,0)}.png">`)
+        card.children().eq(2).append(`<img src="https://www.serebii.net/pokedex-sv/icon/new/${pk[0].toString().padStart(3, 0)}.png">`)
     });
     card.appendTo($(".teamsPKcontainer > td"))
+    cardInd = $(".teamCard").length - 1
+    card.click(() => {
+        let edit = USER_TEAMS[cardInd]
+        $("#trainerName").val(edit.trainer)
+        $(".pillInput").val(edit.name)
+
+        openDialog($("#teamGeneral"), 0)
+    })
+    card.children().eq(0).children().eq(2).click(el => { // Triple dot more
+        $(".teamCard").css("pointer-events", "none")
+        el.stopPropagation();
+        cardSelected = $(".teamMore").index(el.currentTarget)
+        $("body").one("touchmove", () => {
+            $("#teamOptionDropdown").hide()
+            $(".teamCard").css("pointer-events", "")
+        })
+        $("#teamOptionDropdown").css("top", $(el.currentTarget).position().top)
+        $("#teamOptionDropdown").show()
+        $("#teamOptionDropdown > div").off("click")
+        $("#teamOptionDropdown > div").eq(0).on("touchstart", ok => { //Delete card
+            // TODO: confirm dialog
+            ok.stopPropagation();
+            USER_TEAMS.splice(cardSelected, 1)
+            localStorage.setItem("teams", JSON.stringify(USER_TEAMS))
+            card.off("click")
+            card.remove()
+            $("#teamOptionDropdown").hide()
+            $(".teamCard").css("pointer-events", "")
+        })
+        $("#teamOptionDropdown > div").eq(1).on("touchstart", ok => { //Move to top
+            ok.stopPropagation();
+            USER_TEAMS.unshift(USER_TEAMS[cardSelected])
+            USER_TEAMS.splice(cardSelected + 1, 1)
+            localStorage.setItem("teams", JSON.stringify(USER_TEAMS))
+            card.insertBefore($(".teamCard:first"))
+            $("#teamOptionDropdown").hide()
+            $(".teamCard").css("pointer-events", "")
+        })
+    })
+}
+
+function getTeamAverageTyping(pokemon) {
+    // arg0 example: [1, "Bulbasaur", [1,1]]
+    let typeArray = []
+    for (let i = 0; i < typeColors.length; i++) typeArray.push(0)
+    pokemon.forEach(pk => {
+        if (pk[2][0] == pk[2][1]) typeArray[pk[2][0]]++
+        else {
+            typeArray[pk[2][0]]++
+            typeArray[pk[2][1]]++
+        }
+    });
+    let max1 = typeArray.indexOf(Math.max.apply(null, typeArray))
+    typeArray[max1] = -1
+    let max2 = typeArray.indexOf(Math.max.apply(null, typeArray))
+
+    return [max1, max2]
 }
 
 var USER_TEAMS = []
-const TEAM_TEMPLATE = {name:"", trainer:"", pokemon:[], color:[1,1]}
+const TEAM_TEMPLATE = { name: "", trainer: "", pokemon: [], color: [1, 1] }
 let newTeam;
 function addToTeam(id, name, types) {
-    newTeam.pokemon.push(id)
+    newTeam.pokemon.push([id, name, types])
+}
+
+function makeTeamBackground(pokemon) {
     $("#teamGeneral > #pokeBackground").append(`<div>${name}</div>`)
 }
 
@@ -332,14 +410,14 @@ function makeSettings() {
 
 function filterSearch(el) {
     if ($(el.currentTarget).val().length <= 1) { // Start search with 2 or more characters
-        $(".pokeOption").show()
+        $(".pokeOption:not(.favesHidden)").show()
         return
     }
 
     let query = $(el.currentTarget).val()
     let capitalized = query[0].toUpperCase() + query.slice(1)
     $(".pokeOption").hide()
-    $(`.pokeOption:contains('${capitalized}')`).show()
+    $(`.pokeOption:not(.favesHidden):contains('${capitalized}')`).show()
 }
 
 function openDialog(dialog, isFS) {
@@ -388,12 +466,12 @@ function makeNumInput(affectValue, appendToElement, def = 50, min = 0, max = 100
     let display = $(`<input class="numDisplay" type="number" value="${def}" min="${min}" max="${max}">`)
     display.appendTo(inpContainer)
     let numContainer = $("<div></div>")
-    for (let i = -1; i <= 1; i+=2) {
+    for (let i = -1; i <= 1; i += 2) {
         let button = $(`<button class='numIncrement'>${i == -1 ? "-" : "+"}</button>`)
         button.appendTo(numContainer)
-        button.click(() => {display.val(parseInt(display.val())+i); clampNumInput(affectValue, display, min, max)})
+        button.click(() => { display.val(parseInt(display.val()) + i); clampNumInput(affectValue, display, min, max) })
         display.on("input", () => clampNumInput(affectValue, display, min, max))
-        
+
     }
     numContainer.appendTo(inpContainer)
     inpContainer.appendTo(appendToElement)
@@ -401,14 +479,17 @@ function makeNumInput(affectValue, appendToElement, def = 50, min = 0, max = 100
 
 function openPokeDropdown(el) {
     $("#pokeSearchInput").val("")
-    $(".pokemonInput").attr("disabled", true)
+    $(".pokemonInput:not(#pokeSearchInput)").attr("disabled", true)
     $("#pokemonDropdown").show()
     $("#pokeSearchInput").focus()
-    $("#closeDropdown").one("click",() => {
+    $("#closeDropdown").one("click", () => {
         $(".pokemonInput").attr("disabled", false)
         $("#pokemonDropdown").hide()
     })
-    
+    FAVORITE_POKEMON.forEach(pk => {
+        $(".pokemonStar").eq(pk-1).attr("src", "../assets/star.svg")
+    });
+
     // $("#pokemonDropdown").css("display", "")
     inpSelected = ["playerSearch", "oppoSearch", "addToTeam"].indexOf($(el.target).attr("id"))
     el.preventDefault()
@@ -428,17 +509,18 @@ front.on("doPopupResult", msg => {
     pokemonOption(msg)
 });
 
-$(function (){
+
+$(function () {
     $(".addTeam").click(() => {
         newTeam = TEAM_TEMPLATE;
         openDialog($("#teamGeneral"), 0)
     })
-    $("#addToTeam").click(el => {openPokeDropdown(el)})
+    $("#addToTeam").click(el => { openPokeDropdown(el) })
     $("#trainerName").on("change", el => {
-        newTeam.trainer =  el.currentTarget.value
+        newTeam.trainer = el.currentTarget.value
     })
     $(".pillInput").on("change", el => {
-        newTeam.name =  el.currentTarget.value
+        newTeam.name = el.currentTarget.value
     })
     if (localStorage.getItem("teams") != null) {
         USER_TEAMS = JSON.parse(localStorage.getItem("teams"))
@@ -448,35 +530,55 @@ $(function (){
     }
     $(".teamSave").click(() => {
         USER_TEAMS.push(newTeam)
+        newTeam.color = getTeamAverageTyping(newTeam.pokemon)
         teamCard(newTeam.trainer, newTeam.name, newTeam.color[0], newTeam.color, newTeam.pokemon)
         localStorage.setItem("teams", JSON.stringify(USER_TEAMS))
     })
 
-    $(".navButton").click(el => $("#mainContent")[0].scrollLeft = $("#mainContent > div").eq(0).width()*parseInt(el.currentTarget.getAttribute("data-ind"))*1.25)
+    $(".navButton").click(el => $("#mainContent")[0].scrollLeft = $("#mainContent > div").eq(0).width() * parseInt(el.currentTarget.getAttribute("data-ind")) * 1.25)
     $("#mainContent").on("scroll", el => {
-        let currentScroll = el.currentTarget.scrollLeft-24
-        let max = maxScroll(el.currentTarget)-48
-        let page = currentScroll/max*2
+        let currentScroll = el.currentTarget.scrollLeft - 24
+        let max = maxScroll(el.currentTarget) - 48
+        let page = currentScroll / max * 2
 
         let currentPage = $(".navButton").eq(Math.round(page)).children().eq(0)
-        let nextPage = $(".navButton").eq(Math.floor(page)+1).children().eq(0)
-        let prevPage = $(".navButton").eq(Math.floor(page)-1).children().eq(0)
+        let nextPage = $(".navButton").eq(Math.floor(page) + 1).children().eq(0)
+        let prevPage = $(".navButton").eq(Math.floor(page) - 1).children().eq(0)
 
-        currentPage.css("opacity",(page%1)*2)
-        nextPage.css("opacity",1-(page%1))
+        currentPage.css("opacity", Math.round((page % 1) * 2 * 10) / 10)
+        nextPage.css("opacity", Math.round((1 - page % 1) * 10) / 10)
     })
 
     makeSettings();
-    
-    $(".pokemonInput:not(#trainerName)").click(el => openPokeDropdown(el))
+
+    $(".pokemonInput:not(#trainerName, #pokeSearchInput)").click(el => openPokeDropdown(el))
 
     $(".randomPokemon").click(el => {
         inpSelected = parseInt(el.currentTarget.getAttribute("data-ind"))
-        let pokeRandom = Math.round(1+Math.random()*1007)
+        let pokeRandom = Math.round(1 + Math.random() * 1007)
         front.send("doSearch", [pokeRandom, 1])
     })
 
     $("#pokeSearchInput").keyup(el => filterSearch(el))
+    $("#showFavesOnly").click(el => {
+        if (!showingFaves) {
+            $(el.currentTarget).attr("src", "../assets/star.svg")
+            $(".pokeOption").hide()
+            $(".pokeOption").addClass("favesHidden")
+            let opt = $(`.pokemonStar[src*='star.svg']`).parent()
+            opt.removeClass("favesHidden")
+            opt.show()
+            // FAVORITE_POKEMON.forEach(pk => {
+            //     // let opt = $(`.pokeOption:contains('#${String(pk).padStart(3, "0")}')`)
+            // });
+        }
+        else {
+            $(".pokeOption").removeClass("favesHidden")
+            $(el.currentTarget).attr("src", "../assets/starUnfilled.svg")
+            filterSearch({currentTarget: $("#pokeSearchInput")[0]})
+        }
+        showingFaves = !showingFaves
+    })
 
     $("#battleButton").click(() => {
         if (!updateBattleButton()) return
@@ -485,5 +587,6 @@ $(function (){
 
     $("#darkBG").click(hideDialog)
     $("#battleClose").click(hideDialog)
-    $(".pillInput").on("input", e => {$(e.target).width(0);$(e.target).width(e.target.scrollWidth)})
+    $(".pillInput").on("input", e => { $(e.target).width(0); $(e.target).width(e.target.scrollWidth) })
+    
 })

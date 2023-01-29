@@ -113,17 +113,12 @@
     <div id="pkTeamMain">
       <div id="pkHeader">
         <h2 id="teamTitle">
-          <input placeholder="Red's Team" class="pillInput" maxlength="17">
+          <input placeholder="Team Name" class="pillInput" maxlength="17">
           <img src="../assets/edit.svg">
         </h2>
       </div>
       <div>
         <div class="iconOption"><input type="text" placeholder="Trainer's Name" class="pokemonInput" id="trainerName"></div>
-        <hr>
-        <div class="iconOption"><img src="../assets/share.svg">Share</div>
-        <hr>
-        <div class="iconOption"><img src="../assets/moveToTop.svg">Move to Top</div>
-        <hr>
         <div class="bottomRounded mainButtonContainer columnFlex">
           <button onclick="hideDialog()" class="bottomRounded columnFlex" id="battleClose"><img
               src="../assets/close.svg">Cancel</button>
@@ -132,30 +127,6 @@
         </div>
       </div>
     </div>
-  </dialog>
-
-  <dialog class="floatingDialog" id="teamPokemon">
-    <div class="dropdownOption" id="teamPokemonHeader">
-      <div>
-        <img id="teamPKImage" src="https://serebii.net/pokemon/art/157.png">
-        <div id="teamPKHeaderData">
-          <b>Mike<img src="../assets/edit.svg"></b>
-          <i>Typhlosion</i>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <div class="settingsOption">Level</div>
-    <hr>
-    <div class="dropdownOption">Moves</div>
-    <hr>
-    <div class="bottomRounded mainButtonContainer columnFlex">
-      <button onclick="hideDialog()" class="bottomRounded columnFlex" id="battleClose"><img
-          src="../assets/close.svg">Remove</button>
-      <button onclick="hideDialog()" class="bottomRounded columnFlex" id="battleRematch"><img
-          src="../assets/close.svg">Save</button>
-    </div>
-
   </dialog>
 
   <dialog class="fsDialog" id="battleDialog">
@@ -169,9 +140,10 @@
 
   <div id="pokemonDropdown" style="display: none;">
     <div id="pokeSearch">
-      <button id="closeDropdown"><img src="../assets/menu.svg"></button>
-      <input type="text" placeholder="Search..." id="pokeSearchInput">
-      <button><img src="../assets/star.svg"></button>
+      <button id="closeDropdown"><img src="../assets/back.svg"></button>
+      <input type="text" placeholder="Search..." id="pokeSearchInput" class="pokemonInput">
+      <button><img class="searchFilters" src="../assets/random.svg"></button>
+      <button><img class="searchFilters" id="showFavesOnly" src="../assets/starUnfilled.svg"></button>
     </div>
     <div id="pokeSelectionContainer"></div>
   </div>
@@ -181,7 +153,6 @@
       <div class="pkInputContainer">
         <input autocomplete="off" class="pokemonInput" type="text" id="playerSearch" placeholder="Your Pokémon"
           disabled>
-        <button data-ind="0" class="randomPokemon"><img src="../assets/random.svg"></button>
       </div>
       <div class="teamContainer">
         <div class="teamHeader">
@@ -196,7 +167,6 @@
       <div class="pkInputContainer">
         <input autocomplete="off" class="pokemonInput" type="text" id="oppoSearch" placeholder="Opponent's Pokémon"
           disabled>
-        <button data-ind="1" class="randomPokemon"><img src="../assets/random.svg"></button>
       </div>
       <div class="teamContainer">
         <div class="teamHeader">
@@ -213,13 +183,18 @@
     </div>
 
     <table id="teamsMenu">
+      <div id="teamOptionDropdown" style="display: none;">
+        <div class="iconOption">Delete<img src="../assets/delete.svg"></div>
+        <hr>
+        <div class="iconOption">Move to Top<img src="../assets/moveToTop.svg"></div>
+        <hr>
+        <div class="iconOption">Share<img src="../assets/share.svg"></div>
+      </div>
       <th>
-        <header>Teams<button onclick="localStorage.removeItem('teams')"></button></header>
+        <header>Teams<button onclick="localStorage.removeItem('teams')">Delete</button></header>
       </th>
       <tr class="teamsPKcontainer">
-        <td>
-
-        </td>
+        <td></td>
       </tr>
       <tr>
         <td class="teamsAddButton"><button class="importantButton addTeam" id="teamMakeButton">Create</button></td>

@@ -27,8 +27,8 @@
     "project-name": "PKBattleSim",
     "theme": {
         "fullScreen": false,
-        "colorAccent": "#080808",
-        "colorPrimary": "#080808",
+        "colorAccent": "#de2225",
+        "colorPrimary": "#ebebeb",
         "colorPrimaryDark": "#080808"
     }
 }

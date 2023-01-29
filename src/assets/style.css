@@ -88,13 +88,36 @@ h1 { text-align: center; }
     flex-direction: column;
     padding-top: 3em;
 }
-#pokeSearch img {width: 3em;}
-#pokeSearchInput {flex-grow: 1;}
+#pokeSearch img {
+    width: 2.5em;
+    padding: 0.5em;
+}
+#pokeSearchInput {
+    background: #ffffff26;
+    border: none;
+    box-sizing: border-box;
+    margin: 0.4em 0;
+    border-radius: 4em;
+    flex-grow: 1;
+}
 #pokeSearch {
     position: fixed;
     top: 0;
     display: flex;
     width: 100%;
+    background: var(--POPUPBG);
+}
+
+.pokemonStar {
+    width: 1.6em;
+    float: right;
+    padding-right: 0.1em;
+}
+
+.searchFilters {
+    background: #ffffff26;
+    border-radius: 10em;
+    box-sizing: border-box;
 }
 
 .pokeOption {
@@ -108,10 +131,10 @@ h1 { text-align: center; }
     color: var(--TEXT);
     font-weight: bold;
 }
-#pokemonDropdown button:nth-child(2n+1) {
+#pokeSelectionContainer button:nth-child(2n+1) {
     background: var(--POPUPBG);
 }
-#pokemonDropdown button:nth-child(2n) {
+#pokeSelectionContainer button:nth-child(2n) {
     background: var(--INPUT);
 }
 
@@ -241,7 +264,10 @@ html {overflow-x: hidden;}
     margin-left: auto;
     width: 1.4em;
     opacity: 0.6;
-    margin-right: 0.6em;       
+    margin-right: 0.6em;
+    background: #ffffff36;
+    padding: 0.4em 0.4em;
+    border-radius: 10em;    
 }
 
 .teamDetails {
@@ -254,8 +280,7 @@ html {overflow-x: hidden;}
 }
 .partyContainer {
     display: flex;
-    gap: 1.2em;
-    justify-content: center;
+    justify-content: space-around;
 }
 .teamName h2 { /*Trainer name*/
     font-weight: lighter;
@@ -277,6 +302,21 @@ html {overflow-x: hidden;}
     margin: 1em 0;
     max-height: 65vh;
     overflow-y: auto;
+}
+
+#teamOptionDropdown {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    background: var(--POPUPBG);
+    border-radius: 0.3em;
+    border: var(--BORDER);
+    min-width: min-content;
+    padding: 0.6em 0em;
+    right: -0.5em;
+    z-index: 1;
+    margin-top: 7.5vh;
 }
 
 .importantButton:active {
