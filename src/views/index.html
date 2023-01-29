@@ -4,11 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#4285f4" />
   <link rel="stylesheet" href="../assets/style.css">
   <script type="text/javascript" src="../node_modules/androidjs/lib/androidjs.js"></script>
-  <script type="text/javascript" src="../assets/jquery-3.3.1.slim.min.js"></script>
-  <script type="text/javascript" src="../assets/communicator.js"></script>
+  <script type="text/javascript" src="../js/jquery-3.3.1.slim.min.js"></script>
+  <script type="text/javascript" src="../js/communicator.js"></script>
+  <script type="text/javascript" src="../js/settings.js"></script>
+  <script type="text/javascript" src="../js/teams.js"></script>
+  <script type="text/javascript" src="../js/ui.js"></script>
 </head>
 
 <div id="darkBG"></div>
@@ -150,10 +152,8 @@
 
   <div class="tabContent" id="mainContent" style="width: 100vw;">
     <div id="mainBattle" class="columnFlex">
-      <div class="pkInputContainer">
-        <input autocomplete="off" class="pokemonInput" type="text" id="playerSearch" placeholder="Your Pokémon"
+      <input autocomplete="off" class="pokemonInput" type="text" id="playerSearch" placeholder="Your Pokémon"
           disabled>
-      </div>
       <div class="teamContainer">
         <div class="teamHeader">
           <div class="THleft"><label>Team</label></div>
@@ -161,13 +161,11 @@
         </div>
         <div class="teamPokemon" id="pContainer"></div>
         <div class="containerTutorial columnFlex"><img src="../assets/plus.svg" class="addImg">Add Pokémon with the
-          search box, or pick a team!</div>
+          search box<br>Swipe to pick a team</div>
       </div>
       <hr>
-      <div class="pkInputContainer">
-        <input autocomplete="off" class="pokemonInput" type="text" id="oppoSearch" placeholder="Opponent's Pokémon"
-          disabled>
-      </div>
+      <input autocomplete="off" class="pokemonInput" type="text" id="oppoSearch" placeholder="Opponent's Pokémon"
+      disabled>
       <div class="teamContainer">
         <div class="teamHeader">
           <div class="THleft"><label>Team</label></div>
@@ -219,7 +217,6 @@
       </div>
     </div>
   </div>
-  <script src="battle.js"></script>
 </body>
 <footer>
   <nav>

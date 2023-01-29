@@ -2,66 +2,6 @@ front.send("doPopup");
 var teams = [[], []]
 var typeColors = ["", "#a8a77a", "#c22e28", "#a98ff3", "#a33ea1", "#e2bf65", "#b6a136", "#a6b91a", "#735797", "#b7b7ce", "#ee8130", "#6390f0", "#7ac74c", "#f7d02c", "#f95587", "#96d9d6", "#6f35fc", "#705746", "#d685ad"]
 
-class Setting {
-    constructor(id, value, func) {
-        this.id = id
-        this.value = value
-        this.func = func
-    }
-
-    callFunc() { if (this.func != null) this.func(this.value) }
-
-    switchSetting() {
-        this.value = !this.value
-        this.callFunc()
-        saveSettings()
-    }
-}
-
-var OPTIONS = {
-    updateCheck: new Setting("updateCheck", true, checkUpdates),
-    darkMode: new Setting("darkMode", true, appTheme),
-    animations: new Setting("animations", true, null),
-    artFetch: new Setting("artFetch", true, null)
-}
-
-function saveSettings() {
-    let SHORT_OPT = {}
-    Object.keys(OPTIONS).forEach(key => {
-        SHORT_OPT[key] = OPTIONS[key].value
-    })
-
-    localStorage.setItem("settings", JSON.stringify(SHORT_OPT))
-}
-
-let sett = localStorage.getItem("settings")
-if (sett == null) {
-    saveSettings()
-} else { // Loading settings
-    let settArray = JSON.parse(sett)
-    Object.keys(settArray).forEach(key => {
-        OPTIONS[key].value = settArray[key]
-        OPTIONS[key].callFunc()
-    })
-}
-
-function appTheme(pick) {
-    let picks = ["LIGHT", "DARK"]
-    let option = picks[pick | 0]
-    $(":root").css("--BG", `var(--DEF-${option}-BG)`)
-    $(":root").css("--CARD", `var(--DEF-${option}-CARD)`)
-    $(":root").css("--POPUPBG", `var(--DEF-${option}-POPUPBG)`)
-    $(":root").css("--INPUT", `var(--DEF-${option}-INPUT)`)
-    $(":root").css("--BORDER", `var(--DEF-${option}-BORDER)`)
-    $(":root").css("--TEXT", `var(--DEF-${option}-TEXT)`)
-    $(":root").css("--INVERT", `var(--DEF-${option}-INVERT)`)
-}
-
-function checkUpdates(pick) {
-    if (!pick || $("#settings").prop("open")) return
-    front.send("doCheckUpdate")
-}
-
 window.onerror = function (msg, url, lineNo, columnNo, error) {
     alert(msg)
 }
@@ -134,7 +74,7 @@ function pokemonThumb(id, name, types) {
 
 function spritePlaceholder(height) {
     // Choose placeholder based on pk height
-    if (height < 0.7) $(":root").css("--pk-view-bg", `url(../assets/placeholders/smallest.svg)`)
+    if (height < 0.7) $(":root").css("--pk-view-bg", `url(../assets/placeholders/smallest.png)`)
     else if (height < 1.2) $(":root").css("--pk-view-bg", `url(../assets/placeholders/normal.svg)`)
     else if (height < 1.7) $(":root").css("--pk-view-bg", `url(../assets/placeholders/large.svg)`)
     else $(":root").css("--pk-view-bg", `url(../assets/placeholders/biggest.svg)`)
@@ -210,14 +150,7 @@ function openStatView(pkID) {
     })
 }
 
-function tabScroll(element, option) {
-    let pos = Math.round(option / element.children().length * 100)
-    $(":root").css("--tabScrollLine", `${pos}%`)
-    element.children().removeClass("tabSelected")
-    element.children().eq(option).addClass("tabSelected")
-    let card = $(".tabContent").children().eq(option)
-    $(".tabContent")[0].scrollTo(option * card.width() * 1.25 + 24, 0)
-}
+
 
 function removeCard(el) {
     originalCardPos = 0
@@ -284,96 +217,7 @@ function addPokemon(id, name, types) {
     updateBattleButton()
 }
 
-let cardSelected;
-function teamCard(trainerName, teamName, icon, colors, pokemon) {
-    let bgColors = ["", "#45442D", "#3D201F", "#2B2245", "#371D36", "#2D291E", "#2B2715", "#2B2D17", "#2F263A", "#1E1E39", "#36281D", "#24304B", "#2B3D20", "#363118", "#321A21", "#24403F", "#302942", "#332318", "#361B29"]
-    let card = $(`
-    <div class="teamCard" style="background: linear-gradient(33deg, ${bgColors[colors[0]]}, ${bgColors[colors[1]]}); border-image: linear-gradient(33deg,${typeColors[colors[0]]}, ${typeColors[colors[1]]}) 30;">
-        <div class="teamDetails">
-            <img src="../assets/typeIcons/type_${icon}.webp" class="teamIcon">
-            <div class="teamName">
-                <h2>${trainerName}'s</h2>
-                <h4>${teamName}</h4>
-            </div>
-            <img src="../assets/more.svg" class="teamMore">
-        </div>
-        <hr>
-        <div class="partyContainer"></div>
-    </div>
-    `)
-    pokemon.forEach(pk => {
-        card.children().eq(2).append(`<img src="https://www.serebii.net/pokedex-sv/icon/new/${pk[0].toString().padStart(3, 0)}.png">`)
-    });
-    card.appendTo($(".teamsPKcontainer > td"))
-    cardInd = $(".teamCard").length - 1
-    card.click(() => {
-        let edit = USER_TEAMS[cardInd]
-        $("#trainerName").val(edit.trainer)
-        $(".pillInput").val(edit.name)
 
-        openDialog($("#teamGeneral"), 0)
-    })
-    card.children().eq(0).children().eq(2).click(el => { // Triple dot more
-        $(".teamCard").css("pointer-events", "none")
-        el.stopPropagation();
-        cardSelected = $(".teamMore").index(el.currentTarget)
-        $("body").one("touchmove", () => {
-            $("#teamOptionDropdown").hide()
-            $(".teamCard").css("pointer-events", "")
-        })
-        $("#teamOptionDropdown").css("top", $(el.currentTarget).position().top)
-        $("#teamOptionDropdown").show()
-        $("#teamOptionDropdown > div").off("click")
-        $("#teamOptionDropdown > div").eq(0).on("touchstart", ok => { //Delete card
-            // TODO: confirm dialog
-            ok.stopPropagation();
-            USER_TEAMS.splice(cardSelected, 1)
-            localStorage.setItem("teams", JSON.stringify(USER_TEAMS))
-            card.off("click")
-            card.remove()
-            $("#teamOptionDropdown").hide()
-            $(".teamCard").css("pointer-events", "")
-        })
-        $("#teamOptionDropdown > div").eq(1).on("touchstart", ok => { //Move to top
-            ok.stopPropagation();
-            USER_TEAMS.unshift(USER_TEAMS[cardSelected])
-            USER_TEAMS.splice(cardSelected + 1, 1)
-            localStorage.setItem("teams", JSON.stringify(USER_TEAMS))
-            card.insertBefore($(".teamCard:first"))
-            $("#teamOptionDropdown").hide()
-            $(".teamCard").css("pointer-events", "")
-        })
-    })
-}
-
-function getTeamAverageTyping(pokemon) {
-    // arg0 example: [1, "Bulbasaur", [1,1]]
-    let typeArray = []
-    for (let i = 0; i < typeColors.length; i++) typeArray.push(0)
-    pokemon.forEach(pk => {
-        if (pk[2][0] == pk[2][1]) typeArray[pk[2][0]]++
-        else {
-            typeArray[pk[2][0]]++
-            typeArray[pk[2][1]]++
-        }
-    });
-    let max1 = typeArray.indexOf(Math.max.apply(null, typeArray))
-    typeArray[max1] = -1
-    let max2 = typeArray.indexOf(Math.max.apply(null, typeArray))
-
-    return [max1, max2]
-}
-
-var USER_TEAMS = []
-const TEAM_TEMPLATE = { name: "", trainer: "", pokemon: [], color: [1, 1] }
-let newTeam;
-function addToTeam(id, name, types) {
-    newTeam.pokemon.push([id, name, types])
-}
-
-function makeTeamBackground(pokemon) {
-    $("#teamGeneral > #pokeBackground").append(`<div>${name}</div>`)
-}
 
 function updateBattleButton() {
     let hasPokemon = teams[0].length == 0 || teams[1].length == 0
@@ -383,8 +227,7 @@ function updateBattleButton() {
 }
 
 var inpSelected = -1
-var OPTIONS
-$("#creditsButton").click(() => openDialog($("#credits"), 0))
+
 
 front.on("foundPKMN", pkData => {
     if (pkData[1] != 1) return
@@ -398,16 +241,6 @@ front.on("doBattleResult", battleResult => {
     openDialog($("#battleDialog"), 1)
 })
 
-function makeSettings() {
-    $("#settingsMenu .slidebox").remove()
-
-    let settings = $("#settingsMenu .settingsOption")
-    for (let i = 0; i < settings.length; i++) {
-        makeSlidebox(() => OPTIONS[settings.eq(i).attr("data-option")].switchSetting(), settings.eq(i), OPTIONS[settings.eq(i).attr("data-option")].value)
-    }
-}
-
-
 function filterSearch(el) {
     if ($(el.currentTarget).val().length <= 1) { // Start search with 2 or more characters
         $(".pokeOption:not(.favesHidden)").show()
@@ -420,62 +253,7 @@ function filterSearch(el) {
     $(`.pokeOption:not(.favesHidden):contains('${capitalized}')`).show()
 }
 
-function openDialog(dialog, isFS) {
-    if (!isFS) {
-        $("#darkBG").css("display", "block")
-        $("#darkBG").css("opacity", 0.5)
-    }
-    dialog.attr("open", true)
-    dialog.css("animation-name", "popup")
-}
 
-function hideDialog() {
-    $("#darkBG").css("opacity", 0)
-    $("dialog").css("animation-name", "popupClose")
-    setTimeout(() => {
-        $("dialog").attr("open", false)
-        $("#darkBG").css("display", "none")
-    }, 250);
-}
-
-front.on("updateResult", updateIsAvailable => {
-    if (!updateIsAvailable[0]) return
-
-    makeSlidebox(() => OPTIONS["updateCheck"].switchSetting(), $("#updateButtons > div[data-option=updateCheck]"), OPTIONS["updateCheck"].value)
-    $("#newUpdate").text(updateIsAvailable[1])
-    $("#updateLink").attr("href", updateIsAvailable[2])
-    openDialog($("#update"), false)
-})
-
-function makeSlidebox(func, appendToElement, on = false) {
-    let slider = document.createElement("input")
-    slider.type = "checkbox";
-    slider.checked = on
-    slider.id = "slider"
-    slider.className = "slidebox"
-
-    slider.addEventListener("mousedown", ev => {
-        ev.preventDefault()
-        func()
-    })
-    appendToElement.append(slider)
-}
-
-function makeNumInput(affectValue, appendToElement, def = 50, min = 0, max = 100) {
-    let inpContainer = $("<div class='numInput'></div>")
-    let display = $(`<input class="numDisplay" type="number" value="${def}" min="${min}" max="${max}">`)
-    display.appendTo(inpContainer)
-    let numContainer = $("<div></div>")
-    for (let i = -1; i <= 1; i += 2) {
-        let button = $(`<button class='numIncrement'>${i == -1 ? "-" : "+"}</button>`)
-        button.appendTo(numContainer)
-        button.click(() => { display.val(parseInt(display.val()) + i); clampNumInput(affectValue, display, min, max) })
-        display.on("input", () => clampNumInput(affectValue, display, min, max))
-
-    }
-    numContainer.appendTo(inpContainer)
-    inpContainer.appendTo(appendToElement)
-}
 
 function openPokeDropdown(el) {
     $("#pokeSearchInput").val("")
