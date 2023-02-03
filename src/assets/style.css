@@ -81,7 +81,10 @@ h1 { text-align: center; }
     display: flex;
     flex-direction: column;
     top: 0;
+    left: -100%;
 }
+
+#pokeSearch button {filter: var(--INVERT);}
 
 #pokeSelectionContainer {
     display: flex;
@@ -343,14 +346,26 @@ html {overflow-x: hidden;}
     width: 100%;
     box-sizing: border-box;
     overflow: clip;
+    scrollbar-width: none;
 }
 
 .teamPokemon {
     display: flex;
     gap: 0.5em;
     margin: 0.5em;
-    flex-wrap: wrap;
-    justify-content: center;
+    scroll-snap-type: x mandatory;
+    overflow: auto;
+}
+.teamPokemon > * {
+    width: 100%;
+    flex: none;
+    scroll-snap-align: start;
+}
+
+.teamUse {
+    background: var(--yes);
+    font-size: 1.5em;
+    padding: 0.2em 2em;
 }
 
 .teamPokemon:empty {margin: 0;}

@@ -1,8 +1,7 @@
-front.send("doPopup");
 var teams = [[], []]
 var typeColors = ["", "#a8a77a", "#c22e28", "#a98ff3", "#a33ea1", "#e2bf65", "#b6a136", "#a6b91a", "#735797", "#b7b7ce", "#ee8130", "#6390f0", "#7ac74c", "#f7d02c", "#f95587", "#96d9d6", "#6f35fc", "#705746", "#d685ad"]
 
-window.onerror = function (msg, url, lineNo, columnNo, error) {
+window.onerror = function (msg) {
     alert(msg)
 }
 
@@ -165,10 +164,10 @@ function removeCard(el) {
 
 var FAVORITE_POKEMON = []
 let showingFaves = false
-function pokemonOption(messageJSON) {
+async function pokemonOption(messageJSON) {
     let pokemons = messageJSON
+    let fragment = document.createDocumentFragment()
     if (localStorage.getItem("favoritePokemon") != null) FAVORITE_POKEMON = JSON.parse(localStorage.getItem("favoritePokemon"))
-    alert(FAVORITE_POKEMON.join(","))
     Object.values(pokemons).forEach(pkmn => {
         let option = document.createElement("button")
 
@@ -179,9 +178,11 @@ function pokemonOption(messageJSON) {
         option.addEventListener("mousedown", () => addPokemon(id, name, types))
         option.innerText = `#${String(id).padStart(3, "0")} - ${name}`
         option.className = "pokeOption"
-        document.querySelector("#pokeSelectionContainer").appendChild(option)
-        $(option).append("<img src='../assets/starUnfilled.svg' class='pokemonStar'>")
-        $(".pokemonStar:last").on("mousedown", el => {
+        
+        let star = document.createElement("img")
+        star.src = "../assets/starUnfilled.svg"
+        star.className = "pokemonStar"
+        star.addEventListener("mousedown", el => {
             el.stopPropagation()
             if (FAVORITE_POKEMON.includes(pkmn.id)) {
                 $(el.currentTarget).attr("src", "../assets/starUnfilled.svg")
@@ -193,7 +194,11 @@ function pokemonOption(messageJSON) {
             }
             localStorage.setItem("favoritePokemon", JSON.stringify(FAVORITE_POKEMON))
         })
+        option.appendChild(star)
+
+        fragment.appendChild(option)
     });
+    document.querySelector("#pokeSelectionContainer").appendChild(fragment)
     $("#main").removeClass("mainDisabled")
     $(".pokemonInput").attr("disabled", false)
 }
@@ -201,7 +206,7 @@ function pokemonOption(messageJSON) {
 function addPokemon(id, name, types) {
     if (inpSelected == 2) return addToTeam(id, name, types)
 
-    $("#pokemonDropdown").hide()
+    $("#pokemonDropdown").css("left","-105%")
     $(".pokemonInput").attr("disabled", false)
     $(".containerTutorial").eq(inpSelected).hide()
     pokemonThumb(id, name, types)
@@ -256,19 +261,18 @@ function filterSearch(el) {
 
 
 function openPokeDropdown(el) {
+    $("#pokemonDropdown").css("left", "0")
+    $("#pokeSearchInput").focus()
     $("#pokeSearchInput").val("")
     $(".pokemonInput:not(#pokeSearchInput)").attr("disabled", true)
-    $("#pokemonDropdown").show()
-    $("#pokeSearchInput").focus()
     $("#closeDropdown").one("click", () => {
         $(".pokemonInput").attr("disabled", false)
-        $("#pokemonDropdown").hide()
+        $("#pokemonDropdown").css("left", "-105%")
     })
     FAVORITE_POKEMON.forEach(pk => {
         $(".pokemonStar").eq(pk-1).attr("src", "../assets/star.svg")
     });
 
-    // $("#pokemonDropdown").css("display", "")
     inpSelected = ["playerSearch", "oppoSearch", "addToTeam"].indexOf($(el.target).attr("id"))
     el.preventDefault()
 }
@@ -282,13 +286,8 @@ const clampNumInput = (affectValue, display, min, max) => {
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 const maxScroll = el => el.scrollWidth - el.clientWidth
 
-front.on("doPopupResult", msg => {
+$(async function () {
     $("#battleRematch:not(.teamSave)").click(() => front.send("doBattle", [teams]))
-    pokemonOption(msg)
-});
-
-
-$(function () {
     $(".addTeam").click(() => {
         newTeam = TEAM_TEMPLATE;
         openDialog($("#teamGeneral"), 0)
@@ -366,5 +365,13 @@ $(function () {
     $("#darkBG").click(hideDialog)
     $("#battleClose").click(hideDialog)
     $(".pillInput").on("input", e => { $(e.target).width(0); $(e.target).width(e.target.scrollWidth) })
-    
+
+    let xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) pokemonOption(JSON.parse(xhr.responseText))
+    };
+	
+	xhr.open("GET", "../assets/pokemon-min.json", true)
+	xhr.setRequestHeader("Access-Control-Allow-Origin", "*")
+	xhr.send()
 })

@@ -19,8 +19,11 @@ function teamCard(trainerName, teamName, icon, colors, pokemon) {
         <div class="partyContainer"></div>
     </div>
     `)
+    let i = 1
     pokemon.forEach(pk => {
         card.children().eq(2).append(`<img src="https://www.serebii.net/pokedex-sv/icon/new/${pk[0].toString().padStart(3, 0)}.png">`)
+        // $(`.teamPreview[data-tind*='${i}'] .partyContainer`).append(`<img src="https://www.serebii.net/pokedex-sv/icon/new/${pk[0].toString().padStart(3, 0)}.png">`)
+        i++
     });
     card.appendTo($(".teamsPKcontainer > td"))
     cardInd = $(".teamCard").length - 1

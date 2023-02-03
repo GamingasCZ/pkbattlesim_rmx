@@ -1,8 +1,15 @@
-<svg width="16mm" height="16mm" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
- <g fill-rule="evenodd">
-  <path transform="matrix(1.3129 0 0 1.3129 -2.0498 -3.0352)" d="m2.7897 5.702c-0.554 0-1.0002 0.44577-1.0002 0.99977v6.4883c0 0.554 0.44616 1.0002 1.0002 1.0002h6.8169c0.554 0 0.99977-0.44616 0.99977-1.0002v-6.4883c0-0.554-0.44577-0.99977-0.99977-0.99977h-6.8169zm5.7176 0.77305a1.3966 1.3966 0 0 1 1.3969 1.3965 1.3966 1.3966 0 0 1-1.3969 1.3969 1.3966 1.3966 0 0 1-1.3965-1.3969 1.3966 1.3966 0 0 1 1.3965-1.3965zm-4.6792 4.3596a1.3966 1.3966 0 0 1 1.3965 1.3965 1.3966 1.3966 0 0 1-1.3965 1.3969 1.3966 1.3966 0 0 1-1.3969-1.3969 1.3966 1.3966 0 0 1 1.3969-1.3965z" fill="#fff"/>
-  <circle cx="3.1512" cy="12.875" r="1.8927" display="none" fill="#0f0"/>
-  <rect transform="matrix(1 .0017271 -.69573 .7183 0 0)" x="4.6008" y=".55021" width="10.919" height="4.1618" rx="1.2384" ry=".49031" fill="#fff"/>
-  <rect transform="matrix(-.001773 -1 -.72735 .68626 0 0)" x="-26.762" y="-21.523" width="10.636" height="4.11" rx="1.2063" ry=".48421" fill="#fff"/>
+<svg width="16mm" height="16mm" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <clipPath id="b">
+   <path class="powerclip" d="m-2.9466-2.9466h21.893v21.893h-21.893zm19.484 7.3835a4.8627 4.8627 0 0 0-4.8627-4.8627 4.8627 4.8627 0 0 0-4.8627 4.8627 4.8627 4.8627 0 0 0 4.8627 4.8627 4.8627 4.8627 0 0 0 4.8627-4.8627z" fill="#f00"/>
+  </clipPath>
+  <clipPath id="a">
+   <path class="powerclip" d="m-2.9466-2.9466h21.893v21.893h-21.893zm12.157 14.51a4.8627 4.8627 0 0 0-4.8627-4.8627 4.8627 4.8627 0 0 0-4.8627 4.8627 4.8627 4.8627 0 0 0 4.8627 4.8627 4.8627 4.8627 0 0 0 4.8627-4.8627z" fill="#f00"/>
+  </clipPath>
+ </defs>
+ <g clip-path="url(#a)">
+  <path d="m2.8459 2.8459h10.308v10.308h-10.308z" clip-path="url(#b)" fill="none" stroke="#fff" stroke-dashoffset="25.618" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="2" stroke-width="1.585"/>
  </g>
+ <circle cx="11.675" cy="4.437" r="2.7705" fill="none" stroke="#fff" stroke-dashoffset="25.618" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="2" stroke-width="1.585"/>
+ <circle transform="scale(-1)" cx="-4.3249" cy="-11.563" r="2.7705" fill="none" stroke="#fff" stroke-dashoffset="25.618" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="2" stroke-width="1.585"/>
 </svg>

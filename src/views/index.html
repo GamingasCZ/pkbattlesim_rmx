@@ -140,10 +140,10 @@
     </div>
   </dialog>
 
-  <div id="pokemonDropdown" style="display: none;">
+  <div id="pokemonDropdown">
     <div id="pokeSearch">
       <button id="closeDropdown"><img src="../assets/back.svg"></button>
-      <input type="text" placeholder="Search..." id="pokeSearchInput" class="pokemonInput">
+      <input autocomplete="off" type="text" placeholder="Search..." id="pokeSearchInput" class="pokemonInput">
       <button><img class="searchFilters" src="../assets/random.svg"></button>
       <button><img class="searchFilters" id="showFavesOnly" src="../assets/starUnfilled.svg"></button>
     </div>
@@ -159,9 +159,10 @@
           <div class="THleft"><label>Team</label></div>
           <div>None</div>
         </div>
-        <div class="teamPokemon" id="pContainer"></div>
-        <div class="containerTutorial columnFlex"><img src="../assets/plus.svg" class="addImg">Add Pokémon with the
-          search box<br>Swipe to pick a team</div>
+        <div class="teamPokemon" id="pContainer">
+          <div class="containerTutorial columnFlex"><img src="../assets/plus.svg" class="addImg">Add Pokémon with the
+            search box!<br>Swipe to pick a team!</div>
+        </div>
       </div>
       <hr>
       <input autocomplete="off" class="pokemonInput" type="text" id="oppoSearch" placeholder="Opponent's Pokémon"
@@ -171,9 +172,10 @@
           <div class="THleft"><label>Team</label></div>
           <div>None</div>
         </div>
-        <div class="teamPokemon" id="oContainer"></div>
-        <div class="containerTutorial columnFlex"><img src="../assets/plus.svg" class="addImg">Add Pokémon with the
-          search box, or pick a team!</div>
+        <div class="teamPokemon" id="oContainer">
+          <div class="containerTutorial columnFlex"><img src="../assets/plus.svg" class="addImg">Add Pokémon with the
+            search box!<br>Swipe to pick a team!</div>
+        </div>
       </div>
       <div class="bottomButtonContainer">
         <button class="importantButton" id="battleButton" disabled>Battle!</button>
@@ -189,7 +191,7 @@
         <div class="iconOption">Share<img src="../assets/share.svg"></div>
       </div>
       <th>
-        <header>Teams<button onclick="localStorage.removeItem('teams')">Delete</button></header>
+        <header>Teams</header>
       </th>
       <tr class="teamsPKcontainer">
         <td></td>

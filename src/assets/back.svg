@@ -1,6 +1,55 @@
-<svg width="16" height="16" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
- <g transform="translate(-3.0775 -.42017)" fill="none" stroke="#fff" stroke-dashoffset="25.618" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="2" stroke-width="2.5">
-  <path d="m10.734 3.6303-4.7731 4.7731 4.7731 4.8067"/>
-  <path d="m6.1481 8.4202h10.046"/>
- </g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="16"
+   height="16"
+   version="1.1"
+   viewBox="0 0 16 16"
+   id="svg8"
+   sodipodi:docname="back.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs12" />
+  <sodipodi:namedview
+     id="namedview10"
+     pagecolor="#000000"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="22.3125"
+     inkscape:cx="-5.8935574"
+     inkscape:cy="10.890756"
+     inkscape:window-width="1560"
+     inkscape:window-height="874"
+     inkscape:window-x="40"
+     inkscape:window-y="26"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg8" />
+  <g
+     transform="translate(-3.0775 -.42017)"
+     fill="none"
+     stroke="#fff"
+     stroke-dashoffset="25.618"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     stroke-miterlimit="2"
+     stroke-width="2.5"
+     id="g6"
+     style="stroke-width:0.70000031;stroke-dasharray:none">
+    <path
+       d="m10.734 3.6303-4.7731 4.7731 4.7731 4.8067"
+       id="path2"
+       style="stroke-width:0.70000031;stroke-dasharray:none" />
+    <path
+       d="m6.1481 8.4202h10.046"
+       id="path4"
+       style="stroke-width:0.70000031;stroke-dasharray:none" />
+  </g>
 </svg>
